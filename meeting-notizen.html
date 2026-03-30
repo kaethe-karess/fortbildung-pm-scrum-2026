@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting-Notizen</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1C1B18;
+    --ink2: #5C5A54;
+    --ink3: #A09D94;
+    --paper: #F9F7F2;
+    --paper2: #F0EDE4;
+    --paper3: #E6E2D8;
+    --rule: #DDD9CE;
+    --accent: #2B5BA8;
+    --accent-bg: #EEF3FB;
+    --red: #C0392B;
+    --green: #1E7A4A;
+    --amber: #B7690A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2.5rem 1rem 4rem;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 38px;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+
+  .page-title span {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .btn-new {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 20px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background .15s;
+    white-space: nowrap;
+    margin-top: 6px;
+  }
+  .btn-new:hover { background: var(--accent); }
+
+  .meetings-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .meeting-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .meeting-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: border-color .15s;
+  }
+  .card-top.open { border-bottom-color: var(--rule); }
+
+  .card-date {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink3);
+    white-space: nowrap;
+    min-width: 90px;
+  }
+
+  .card-title-wrap { flex: 1; }
+
+  .card-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-top: 2px;
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.open-meeting { background: var(--amber); }
+  .status-dot.done { background: var(--green); }
+
+  .card-actions {
+    display: flex;
+    gap: 4px;
+  }
+
+  .act-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 5px 9px;
+    border-radius: 2px;
+    color: var(--ink3);
+    font-family: 'Epilogue', sans-serif;
+    transition: all .15s;
+  }
+  .act-btn:hover { background: var(--paper2); color: var(--ink); }
+  .act-btn.del:hover { color: var(--red); background: #FEF0EE; }
+
+  .card-body { display: none; padding: 20px 18px 22px; }
+  .card-body.open { display: block; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    color: var(--ink2);
+    text-transform: uppercase;
+  }
+
+  input[type="text"], input[type="date"], input[type="time"], select, textarea {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 14px;
+    padding: 8px 11px;
+    border: 1px solid var(--paper3);
+    border-radius: 2px;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); background: white; }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--ink3);
+    text-transform: uppercase;
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .todo-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    background: var(--paper);
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+  }
+
+  .todo-chk {
+    width: 16px; height: 16px;
+    border-radius: 2px;
+    border: 1.5px solid var(--ink3);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .todo-chk.on { background: var(--green); border-color: var(--green); }
+  .todo-chk.on::after {
+    content: '';
+    width: 4px; height: 7px;
+    border: 1.5px solid white;
+    border-left: none; border-top: none;
+    transform: rotate(45deg) translate(-1px,-1px);
+    display: block;
+  }
+
+  .todo-text { flex: 1; font-size: 14px; color: var(--ink); }
+  .todo-text.done-text { text-decoration: line-through; color: var(--ink3); }
+  .todo-who { font-size: 12px; color: var(--ink3); white-space: nowrap; }
+
+  .todo-del {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink3); font-size: 16px; line-height: 1;
+    padding: 0 4px; border-radius: 2px;
+    transition: color .15s;
+  }
+  .todo-del:hover { color: var(--red); }
+
+  .todo-add-row { display: flex; gap: 8px; }
+  .todo-add-row input { flex: 1; }
+  .todo-add-row input.who { max-width: 140px; }
+
+  .add-todo-btn {
+    padding: 7px 14px;
+    font-size: 13px;
+    font-family: 'Epilogue', sans-serif;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .add-todo-btn:hover { background: #1a4a8a; }
+
+  .export-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .export-btn {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: 0.02em;
+  }
+
+  .export-btn.primary {
+    background: var(--ink);
+    color: white;
+    border: none;
+  }
+  .export-btn.primary:hover { background: var(--accent); }
+
+  .export-btn.secondary {
+    background: transparent;
+    color: var(--ink2);
+    border: 1px solid var(--rule);
+  }
+  .export-btn.secondary:hover { border-color: var(--ink); color: var(--ink); background: var(--paper2); }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--ink3);
+  }
+  .empty-state .big {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-style: italic;
+    color: var(--ink2);
+    margin-bottom: 8px;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+    padding: 12px 16px;
+    background: var(--paper2);
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat-num { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); }
+  .stat-label { font-size: 11px; color: var(--ink3); letter-spacing: 0.05em; }
+
+  @media print {
+    .btn-new, .card-actions, .add-todo-btn, .export-row, .todo-del, .todo-add-row { display: none !important; }
+    .card-body { display: block !important; }
+    body { padding: 0; }
+    .meeting-card { break-inside: avoid; margin-bottom: 2rem; border: none; border-bottom: 1px solid #ccc; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Meeting-<span>Notizen</span></div>
+      <div style="font-size:13px;color:var(--ink3);margin-top:4px;">Prototyp · Claude Artifact</div>
+    </div>
+    <button class="btn-new" onclick="newMeeting()">+ Neues Meeting</button>
+  </div>
+
+  <div class="stats-bar" id="stats"></div>
+  <div class="meetings-list" id="list"></div>
+</div>
+
+<script>
+var meetings = [];
+var nextId = 1;
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  var p = d.split('-');
+  return p[2]+'.'+p[1]+'.'+p[0];
+}
+
+function newMeeting() {
+  var id = nextId++;
+  meetings.unshift({
+    id: id,
+    title: 'Neues Meeting',
+    date: today(),
+    time: '',
+    ort: '',
+    teilnehmer: '',
+    ziel: '',
+    agenda: '',
+    notizen: '',
+    entscheidungen: '',
+    todos: [],
+    open: true,
+    done: false
+  });
+  render();
+  setTimeout(function(){ 
+    var el = document.getElementById('title-'+id);
+    if(el){ el.focus(); el.select(); }
+  }, 50);
+}
+
+function toggleCard(id) {
+  meetings = meetings.map(function(m){ return m.id===id ? Object.assign({},m,{open:!m.open}) : m; });
+  render();
+}
+
+function updateField(id, field, val) {
+  meetings = meetings.map(function(m){ return m.id===id ? Object.assign({},m,{[field]:val}) : m; });
+  renderStats();
+}
+
+function deleteMeeting(id) {
+  if(!confirm('Meeting löschen?')) return;
+  meetings = meetings.filter(function(m){ return m.id!==id; });
+  render();
+}
+
+function toggleDone(id) {
+  meetings = meetings.map(function(m){ return m.id===id ? Object.assign({},m,{done:!m.done}) : m; });
+  render();
+}
+
+function addTodo(id) {
+  var textEl = document.getElementById('todo-text-'+id);
+  var whoEl  = document.getElementById('todo-who-'+id);
+  var text = textEl ? textEl.value.trim() : '';
+  if (!text) return;
+  var who = whoEl ? whoEl.value.trim() : '';
+  meetings = meetings.map(function(m){
+    if(m.id!==id) return m;
+    var todos = m.todos.concat([{tid: Date.now(), text:text, who:who, done:false}]);
+    return Object.assign({},m,{todos:todos});
+  });
+  if(textEl) textEl.value='';
+  if(whoEl) whoEl.value='';
+  renderCard(id);
+}
+
+function toggleTodo(id, tid) {
+  meetings = meetings.map(function(m){
+    if(m.id!==id) return m;
+    var todos = m.todos.map(function(t){ return t.tid===tid?Object.assign({},t,{done:!t.done}):t; });
+    return Object.assign({},m,{todos:todos});
+  });
+  renderCard(id);
+}
+
+function deleteTodo(id, tid) {
+  meetings = meetings.map(function(m){
+    if(m.id!==id) return m;
+    return Object.assign({},m,{todos:m.todos.filter(function(t){return t.tid!==tid;})});
+  });
+  renderCard(id);
+}
+
+function copyText(id) {
+  var m = meetings.find(function(x){return x.id===id;});
+  if(!m) return;
+  var doneTodos = m.todos.filter(function(t){return t.done;}).length;
+  var lines = [
+    '📋 MEETING-PROTOKOLL',
+    '═══════════════════════════════',
+    'Titel: '+m.title,
+    'Datum: '+formatDate(m.date)+(m.time?' um '+m.time:''),
+    m.ort?'Ort: '+m.ort:'',
+    m.teilnehmer?'Teilnehmer: '+m.teilnehmer:'',
+    '',
+    m.ziel?'ZIEL\n'+m.ziel:'',
+    m.agenda?'\nAGENDA\n'+m.agenda:'',
+    m.notizen?'\nNOTIZEN\n'+m.notizen:'',
+    m.entscheidungen?'\nENTSCHEIDUNGEN\n'+m.entscheidungen:'',
+  ];
+  if(m.todos.length){
+    lines.push('\nACTION ITEMS ('+doneTodos+'/'+m.todos.length+' erledigt)');
+    m.todos.forEach(function(t){
+      lines.push((t.done?'[x]':'[ ]')+' '+t.text+(t.who?' → '+t.who:''));
+    });
+  }
+  lines.push('\n───────────────────────────────');
+  var text = lines.filter(function(l){return l!==undefined&&l!=='';}).join('\n');
+  navigator.clipboard.writeText(text).then(function(){
+    alert('Protokoll in Zwischenablage kopiert!');
+  });
+}
+
+function printCard(id) { window.print(); }
+
+function renderCard(id) {
+  var m = meetings.find(function(x){return x.id===id;});
+  if(!m) return;
+  var el = document.getElementById('card-'+id);
+  if(!el) return;
+  el.outerHTML = buildCard(m);
+}
+
+function buildCard(m) {
+  var doneTodos = m.todos.filter(function(t){return t.done;}).length;
+  var todoHtml = m.todos.map(function(t){
+    return '<div class="todo-item">'
+      +'<div class="todo-chk'+(t.done?' on':'')+'" onclick="toggleTodo('+m.id+','+t.tid+')"></div>'
+      +'<span class="todo-text'+(t.done?' done-text':'')+'">'+escHtml(t.text)+'</span>'
+      +(t.who?'<span class="todo-who">→ '+escHtml(t.who)+'</span>':'')
+      +'<button class="todo-del" onclick="deleteTodo('+m.id+','+t.tid+')">×</button>'
+    +'</div>';
+  }).join('');
+
+  return '<div class="meeting-card" id="card-'+m.id+'">'
+    +'<div class="card-top'+(m.open?' open':'')+'" onclick="toggleCard('+m.id+')">'
+      +'<div class="card-date">'+formatDate(m.date)+(m.time?' · '+m.time:'')+'</div>'
+      +'<div class="card-title-wrap">'
+        +'<div class="card-title">'+escHtml(m.title)+'</div>'
+        +(m.teilnehmer?'<div class="card-meta">'+escHtml(m.teilnehmer)+'</div>':'')
+      +'</div>'
+      +'<div class="status-dot '+(m.done?'done':'open-meeting')+'"></div>'
+      +'<div class="card-actions" onclick="event.stopPropagation()">'
+        +'<button class="act-btn" onclick="toggleDone('+m.id+')" title="'+(m.done?'Wieder öffnen':'Als abgeschlossen markieren')+'">'+(m.done?'↺':'✓')+'</button>'
+        +'<button class="act-btn del" onclick="deleteMeeting('+m.id+')" title="Löschen">×</button>'
+      +'</div>'
+    +'</div>'
+    +'<div class="card-body'+(m.open?' open':'')+'">'
+      +'<div class="form-grid">'
+        +'<div class="form-group full">'
+          +'<label>Titel</label>'
+          +'<input type="text" id="title-'+m.id+'" value="'+escAttr(m.title)+'" onchange="updateField('+m.id+',\'title\',this.value)" onblur="render()" />'
+        +'</div>'
+        +'<div class="form-group">'
+          +'<label>Datum</label>'
+          +'<input type="date" value="'+m.date+'" onchange="updateField('+m.id+',\'date\',this.value)" />'
+        +'</div>'
+        +'<div class="form-group">'
+          +'<label>Uhrzeit</label>'
+          +'<input type="time" value="'+m.time+'" onchange="updateField('+m.id+',\'time\',this.value)" />'
+        +'</div>'
+        +'<div class="form-group">'
+          +'<label>Ort / Link</label>'
+          +'<input type="text" value="'+escAttr(m.ort)+'" placeholder="Raum, Teams-Link…" onchange="updateField('+m.id+',\'ort\',this.value)" />'
+        +'</div>'
+        +'<div class="form-group">'
+          +'<label>Teilnehmer</label>'
+          +'<input type="text" value="'+escAttr(m.teilnehmer)+'" placeholder="Namen, kommagetrennt" onchange="updateField('+m.id+',\'teilnehmer\',this.value)" />'
+        +'</div>'
+        +'<div class="form-group full">'
+          +'<label>Ziel des Meetings</label>'
+          +'<input type="text" value="'+escAttr(m.ziel)+'" placeholder="Was soll erreicht werden?" onchange="updateField('+m.id+',\'ziel\',this.value)" />'
+        +'</div>'
+        +'<div class="form-group full">'
+          +'<label>Agenda</label>'
+          +'<textarea placeholder="Agenda-Punkte…" onchange="updateField('+m.id+',\'agenda\',this.value)">'+escHtml(m.agenda)+'</textarea>'
+        +'</div>'
+        +'<div class="form-group full">'
+          +'<label>Notizen &amp; Diskussion</label>'
+          +'<textarea placeholder="Was wurde besprochen?" onchange="updateField('+m.id+',\'notizen\',this.value)" style="min-height:110px">'+escHtml(m.notizen)+'</textarea>'
+        +'</div>'
+        +'<div class="form-group full">'
+          +'<label>Entscheidungen</label>'
+          +'<textarea placeholder="Was wurde entschieden?" onchange="updateField('+m.id+',\'entscheidungen\',this.value)">'+escHtml(m.entscheidungen)+'</textarea>'
+        +'</div>'
+      +'</div>'
+      +'<div class="section-label">Action Items ('+doneTodos+'/'+m.todos.length+' erledigt)</div>'
+      +'<div class="todo-list">'+todoHtml+'</div>'
+      +'<div class="todo-add-row">'
+        +'<input type="text" id="todo-text-'+m.id+'" placeholder="Aufgabe…" onkeydown="if(event.key===\'Enter\')addTodo('+m.id+')" />'
+        +'<input type="text" id="todo-who-'+m.id+'" class="who" placeholder="Zuständig" />'
+        +'<button class="add-todo-btn" onclick="addTodo('+m.id+')">+ Hinzufügen</button>'
+      +'</div>'
+      +'<div class="export-row">'
+        +'<button class="export-btn primary" onclick="copyText('+m.id+')">Protokoll kopieren</button>'
+        +'<button class="export-btn secondary" onclick="window.print()">Drucken</button>'
+      +'</div>'
+    +'</div>'
+  +'</div>';
+}
+
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return String(s||'').replace(/"/g,'&quot;');}
+
+function renderStats() {
+  var total = meetings.length;
+  var done = meetings.filter(function(m){return m.done;}).length;
+  var openTodos = meetings.reduce(function(a,m){return a+m.todos.filter(function(t){return !t.done;}).length;},0);
+  var el = document.getElementById('stats');
+  if(!el) return;
+  if(!total){ el.style.display='none'; return; }
+  el.style.display='flex';
+  el.innerHTML =
+    '<div class="stat"><span class="stat-num">'+total+'</span><span class="stat-label">Meetings</span></div>'
+   +'<div class="stat"><span class="stat-num">'+done+'</span><span class="stat-label">Abgeschlossen</span></div>'
+   +'<div class="stat"><span class="stat-num">'+(total-done)+'</span><span class="stat-label">Offen</span></div>'
+   +'<div class="stat"><span class="stat-num">'+openTodos+'</span><span class="stat-label">Offene Action Items</span></div>';
+}
+
+function render() {
+  renderStats();
+  var el = document.getElementById('list');
+  if(!meetings.length){
+    el.innerHTML='<div class="empty-state"><div class="big">Noch keine Meetings</div><div>Klicke auf „+ Neues Meeting" um zu starten.</div></div>';
+    return;
+  }
+  el.innerHTML = meetings.map(buildCard).join('');
+}
+
+render();
+</script>
+</body>
+</html>
