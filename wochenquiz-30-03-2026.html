@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wochenquiz · 30.03.2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EFE9;
+    --border: #E2E0D8;
+    --border2: #CCCAB8;
+    --text: #1A1917;
+    --text2: #6B6960;
+    --text3: #A8A69C;
+    --blue: #185FA5;
+    --blue-bg: #EAF2FC;
+    --blue-dark: #0C447C;
+    --green: #2D7A4F;
+    --green-bg: #EBF5EE;
+    --green-text: #1C5C38;
+    --red: #A32D2D;
+    --red-bg: #FEF0F0;
+    --red-text: #791F1F;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2.5rem 1rem 4rem;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .app { max-width: 600px; margin: 0 auto; }
+
+  header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+    color: var(--text);
+  }
+
+  .date-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 4px 10px;
+    background: var(--blue-bg);
+    color: var(--blue-dark);
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-top: 3px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .progress-wrap { margin-bottom: 1.75rem; }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .q-num {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .q-topic {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .q-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+
+  .opt {
+    padding: 10px 14px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    text-align: left;
+    transition: all .15s;
+    line-height: 1.5;
+  }
+
+  .opt:hover:not(:disabled) { background: var(--surface2); border-color: var(--blue); }
+  .opt.correct { background: var(--green-bg); border-color: var(--green); color: var(--green-text); font-weight: 500; }
+  .opt.wrong { background: var(--red-bg); border-color: var(--red); color: var(--red-text); }
+  .opt.show-correct { background: var(--green-bg); border-color: var(--green); color: var(--green-text); }
+  .opt:disabled { cursor: default; }
+
+  .feedback {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    line-height: 1.7;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-bg); color: var(--green-text); border-left: 3px solid var(--green); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  .feedback.nok { background: var(--red-bg); color: var(--red-text); border-left: 3px solid var(--red); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+  .nav-row { display: flex; justify-content: flex-end; }
+
+  .nav-btn {
+    padding: 9px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .nav-btn:hover { background: var(--blue-dark); }
+  .nav-btn:disabled { background: var(--border2); cursor: default; color: var(--text3); }
+
+  .result {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+  }
+
+  .result-score {
+    font-size: 56px;
+    font-weight: 500;
+    color: var(--blue);
+    line-height: 1;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .result-pct {
+    font-size: 14px;
+    color: var(--text3);
+    margin: 6px 0 1.25rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .result-msg {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .result-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+  .btn-secondary {
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-secondary:hover { border-color: var(--text); color: var(--text); }
+
+  .btn-primary {
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+
+  .score-log {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .score-log h3 {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .log-entry {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text2);
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-score { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); }
+
+  footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-top">
+      <h1>Wochenquiz</h1>
+      <span class="date-badge">30.03.2026</span>
+    </div>
+    <p class="subtitle">Weiterbildung Projektmanagement + Scrum · ChapterNext · Woche 1</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">Frage 1 von 5</span>
+      <span id="prog-score">0 richtig</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="prog" style="width:20%"></div>
+    </div>
+  </div>
+
+  <div id="qarea"></div>
+
+  <div class="score-log" id="log-wrap" style="display:none">
+    <h3>Verlauf</h3>
+    <div id="log-entries"></div>
+  </div>
+
+  <footer>wochenquiz-30-03-2026.html · Fortbildung PM + Scrum</footer>
+</div>
+
+<script>
+var Qs = [
+  {
+    topic: "Algorithmen",
+    tc: "#EBF5EE", tt: "#1C5C38",
+    q: "Welche Aussage beschreibt einen Algorithmus am besten?",
+    opts: [
+      "Eine zufällige Folge von Schritten zur Problemlösung",
+      "Eine endliche, eindeutige Folge von Anweisungen, die ein Problem schrittweise löst",
+      "Ein Programm, das nur auf Computern läuft",
+      "Eine Datenbank mit gespeicherten Lösungen"
+    ],
+    correct: 1,
+    fb: "Ein Algorithmus ist definiert durch Endlichkeit, Eindeutigkeit und schrittweise Ausführung. MYCIN z.B. ist ein regelbasierter Algorithmus: Wenn Symptom X → dann Empfehlung Y."
+  },
+  {
+    topic: "Neuronale Netze",
+    tc: "#EEEDFE", tt: "#3C3489",
+    q: "Warum scheitert die Gesichtserkennung manchmal bei Masken, klappt aber trotzdem manchmal?",
+    opts: [
+      "Weil das Netz zufällig rät",
+      "Weil andere stabile Muster (Stirn, Augenabstand, Ohrform) noch erkennbar sind",
+      "Weil Masken transparent sind",
+      "Weil das Netz nur Farben analysiert"
+    ],
+    correct: 1,
+    fb: "Das neuronale Netz gewichtet viele Merkmale. Fehlen 40–60% (Nase, Mund, Wangen), reichen die verbleibenden stabilen Muster manchmal noch aus, um die Konfidenz-Schwelle zu erreichen."
+  },
+  {
+    topic: "LLM-Halluzinationen",
+    tc: "#FAEEDA", tt: "#633806",
+    q: "Was ist eine Halluzination bei einem LLM (Large Language Model)?",
+    opts: [
+      "Ein kreatives Gedicht, das das Modell schreibt",
+      "Eine bewusste Lüge des Modells",
+      "Eine faktisch falsche Ausgabe, die vom Modell überzeugend als korrekt präsentiert wird",
+      "Ein technischer Fehler beim Laden des Modells"
+    ],
+    correct: 2,
+    fb: "Das Modell 'lügt' nicht absichtlich – es generiert die statistisch wahrscheinlichste Wortfolge, ohne echtes Wahrheitsverständnis. Daher immer gegenprüfen, besonders bei Zahlen, Daten und Zitaten!"
+  },
+  {
+    topic: "PM Düsseldorf",
+    tc: "#EAF2FC", tt: "#0C447C",
+    q: "Welches Gehalt kann ein zertifizierter Scrum Master in Düsseldorf im Median erwarten?",
+    opts: [
+      "ca. 35.000 € brutto/Jahr",
+      "ca. 50.000 € brutto/Jahr",
+      "ca. 82.000 € brutto/Jahr",
+      "ca. 120.000 € brutto/Jahr"
+    ],
+    correct: 2,
+    fb: "Laut Robert Half liegt der Median für Scrum Master in Düsseldorf bei ~82.000 € brutto/Jahr. Mit PSM I/II-Zertifikat liegt man genau im gefragtesten Profil am Düsseldorfer Arbeitsmarkt."
+  },
+  {
+    topic: "Claude Artifacts",
+    tc: "#E3F5EE", tt: "#085041",
+    q: "Was ist der größte Unterschied zwischen GPT Canvas und Claude Artifacts?",
+    opts: [
+      "Canvas ist kostenlos, Artifacts sind kostenpflichtig",
+      "Artifacts können vollständig interaktive Web-Apps erzeugen, Canvas ist hauptsächlich für Texte & Code",
+      "Canvas unterstützt mehr Sprachen",
+      "Es gibt keinen Unterschied, beide sind identisch"
+    ],
+    correct: 1,
+    fb: "Claude Artifacts können vollständige interaktive HTML/React-Anwendungen erzeugen – wie der Übungsordner oder das Meeting-Notizen-Tool. Das geht mit GPT Canvas so nicht."
+  }
+];
+
+var cur = 0, score = 0, answered = false;
+var history = [];
+
+function render() {
+  if (cur >= Qs.length) { showResult(); return; }
+  var q = Qs[cur];
+  var pct = Math.round((cur + 1) / Qs.length * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = 'Frage ' + (cur+1) + ' von ' + Qs.length;
+  document.getElementById('prog-score').textContent = score + ' richtig';
+
+  var html = '<div class="q-card">'
+    + '<div class="q-meta">'
+    + '<span class="q-num">Frage ' + (cur+1) + '</span>'
+    + '<span class="q-topic" style="background:' + q.tc + ';color:' + q.tt + '">' + q.topic + '</span>'
+    + '</div>'
+    + '<div class="q-text">' + q.q + '</div>'
+    + '<div class="options">'
+    + q.opts.map(function(o, i) {
+        return '<button class="opt" id="opt' + i + '" onclick="pick(' + i + ')">'
+          + String.fromCharCode(65 + i) + '. ' + o + '</button>';
+      }).join('')
+    + '</div>'
+    + '<div class="feedback" id="fb"></div>'
+    + '<div class="nav-row"><button class="nav-btn" id="nxt" onclick="next()" disabled>Weiter →</button></div>'
+    + '</div>';
+
+  document.getElementById('qarea').innerHTML = html;
+  answered = false;
+}
+
+function pick(i) {
+  if (answered) return;
+  answered = true;
+  var q = Qs[cur];
+  var correct = i === q.correct;
+  if (correct) score++;
+  history.push({ topic: q.topic, correct: correct });
+
+  for (var j = 0; j < q.opts.length; j++) {
+    var btn = document.getElementById('opt' + j);
+    btn.disabled = true;
+    if (j === q.correct) btn.classList.add(i === q.correct ? 'correct' : 'show-correct');
+    else if (j === i) btn.classList.add('wrong');
+  }
+
+  var fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (correct ? 'ok' : 'nok');
+  fb.innerHTML = (correct ? 'Richtig! ' : 'Leider falsch. ') + q.fb;
+  document.getElementById('prog-score').textContent = score + ' richtig';
+  document.getElementById('nxt').disabled = false;
+}
+
+function next() {
+  cur++;
+  if (cur >= Qs.length) showResult();
+  else render();
+}
+
+function showResult() {
+  var pct = Math.round(score / Qs.length * 100);
+  document.getElementById('prog').style.width = '100%';
+  document.getElementById('prog-label').textContent = 'Quiz abgeschlossen';
+  document.getElementById('prog-score').textContent = score + '/' + Qs.length + ' richtig';
+
+  var msg = score === 5
+    ? 'Perfekt! Alle 5 Themen der Woche sicher verinnerlicht. Ausgezeichnete Vorbereitung für den nächsten Sprint!'
+    : score >= 4
+    ? 'Sehr gut! Fast perfekt – nur eine kleine Wissenslücke. Die schließt sich mit der nächsten Übungseinheit.'
+    : score >= 3
+    ? 'Gut! Die Kernthemen sitzen. Schau dir die markierten Themen nochmal im Übungsordner an.'
+    : 'Noch Luft nach oben – aber genau dafür ist der Übungsordner da! Wiederhole die schwächeren Themen.';
+
+  var logHtml = history.map(function(h) {
+    return '<div class="log-entry">'
+      + '<span>' + h.topic + '</span>'
+      + '<span class="log-score" style="color:' + (h.correct ? '#2D7A4F' : '#A32D2D') + '">'
+      + (h.correct ? '✓ richtig' : '✗ falsch') + '</span>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('qarea').innerHTML = '<div class="result">'
+    + '<div class="result-score">' + score + '/' + Qs.length + '</div>'
+    + '<div class="result-pct">' + pct + '% · 30.03.2026</div>'
+    + '<div class="result-msg">' + msg + '</div>'
+    + '<div class="result-actions">'
+    + '<button class="btn-secondary" onclick="restart()">Nochmal versuchen</button>'
+    + '<button class="btn-primary" onclick="window.print()">Ergebnis drucken</button>'
+    + '</div>'
+    + '</div>';
+
+  var logWrap = document.getElementById('log-wrap');
+  logWrap.style.display = 'block';
+  document.getElementById('log-entries').innerHTML = logHtml;
+}
+
+function restart() {
+  cur = 0; score = 0; answered = false; history = [];
+  document.getElementById('log-wrap').style.display = 'none';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
