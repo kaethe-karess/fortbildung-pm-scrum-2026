@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Übungen – Weiterbildung</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EFE9;
+    --border: #E2E0D8;
+    --border2: #CCCAB8;
+    --text: #1A1917;
+    --text2: #6B6960;
+    --text3: #A8A69C;
+    --blue: #185FA5;
+    --blue-bg: #EAF2FC;
+    --blue-dark: #0C447C;
+    --green: #2D7A4F;
+    --green-bg: #EBF5EE;
+    --purple: #534AB7;
+    --purple-bg: #EEEDFE;
+    --amber: #854F0B;
+    --amber-bg: #FEF3E2;
+    --teal: #0F6E56;
+    --teal-bg: #E3F5EE;
+    --gray: #5F5E5A;
+    --gray-bg: #F1F0EC;
+    --red: #A32D2D;
+    --red-bg: #FEF0F0;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .app {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left h1 {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .header-left p {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .badge {
+    background: var(--blue-bg);
+    color: var(--blue-dark);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--blue);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .fbtn {
+    padding: 5px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .fbtn:hover { border-color: var(--blue); color: var(--blue); }
+  .fbtn.on { background: var(--blue); color: white; border-color: var(--blue); }
+
+  .cdot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .entries { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+
+  .card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.09); }
+  .card.done .ename { color: var(--text3); text-decoration: line-through; }
+
+  .card-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .chk {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border2);
+    background: transparent;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all .15s;
+  }
+
+  .chk:hover { border-color: var(--blue); }
+  .chk.on { background: var(--blue); border-color: var(--blue); }
+
+  .chk.on::after {
+    content: '';
+    display: block;
+    width: 5px; height: 9px;
+    border: 2px solid white;
+    border-left: none; border-top: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .ename {
+    font-size: 15px;
+    color: var(--text);
+    flex: 1;
+    font-weight: 400;
+  }
+
+  .edate {
+    font-size: 12px;
+    color: var(--text3);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: all .15s;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .icon-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .icon-btn.ai {
+    color: var(--blue-dark);
+    background: var(--blue-bg);
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  .icon-btn.ai:hover { background: #D4E8F8; }
+  .icon-btn.ai:disabled { opacity: 0.5; cursor: default; background: var(--surface2); color: var(--text3); }
+  .icon-btn.del:hover { color: var(--red); background: var(--red-bg); }
+
+  .sub {
+    display: none;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .sub.open { display: block; }
+
+  .sub-inner { padding: 12px 14px 14px 44px; }
+
+  .sub textarea {
+    width: 100%;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 10px 12px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    line-height: 1.7;
+    transition: border-color .15s;
+  }
+
+  .sub textarea:focus { border-color: var(--blue); }
+
+  .loading-row {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    padding: 8px 0;
+  }
+
+  .loading-row.show { display: flex; }
+
+  .spin {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .add-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.25rem;
+  }
+
+  .add-section h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+  }
+
+  .add-row { display: flex; gap: 8px; margin-bottom: 8px; }
+
+  .add-row input, .add-row select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+  }
+
+  .add-row input { flex: 1; }
+  .add-row input:focus, .add-row select:focus { border-color: var(--blue); background: white; }
+
+  .add-note {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color .15s;
+  }
+
+  .add-note:focus { border-color: var(--blue); background: white; }
+
+  .add-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s;
+    letter-spacing: 0.01em;
+  }
+
+  .add-btn:hover { background: var(--blue-dark); }
+
+  .empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text3);
+    font-size: 14px;
+  }
+
+  .result-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-top: 8px;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 2.5rem;
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* === MODUL-SEKTION === */
+  .modul-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .modul-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--blue-bg);
+    border: 1px solid #C5DAEF;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    cursor: default;
+  }
+
+  .modul-header .modul-icon {
+    font-size: 16px;
+  }
+
+  .modul-header h2 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue-dark);
+    flex: 1;
+  }
+
+  .modul-header .modul-meta {
+    font-size: 12px;
+    color: var(--blue);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* === KAPITEL-ORDNER === */
+  .kapitel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .kapitel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .kapitel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .kapitel-header:hover {
+    background: var(--surface2);
+  }
+
+  .kapitel-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .kapitel-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .kapitel-subtitle {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 400;
+  }
+
+  .kapitel-stats {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .kapitel-toggle {
+    font-size: 11px;
+    color: var(--text3);
+    transition: transform 0.2s;
+  }
+
+  .kapitel-toggle.open {
+    transform: rotate(180deg);
+  }
+
+  .kapitel-body {
+    display: none;
+    padding: 0 14px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .kapitel-body.open {
+    display: block;
+  }
+
+  .kapitel-entries {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .kapitel-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--text3);
+    font-size: 13px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--border2);
+  }
+
+  .kapitel-add {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .kapitel-add input {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+  }
+
+  .kapitel-add input:focus {
+    border-color: var(--blue);
+    background: #fff;
+  }
+
+  .kapitel-add button {
+    padding: 8px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .kapitel-add button:hover {
+    background: var(--blue-dark);
+  }
+
+  /* Kapitel-Card (kompakter als normale Card) */
+  .kcard {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .kcard-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+  }
+
+  .kcard .chk {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .kcard .ename {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .kcard.done .ename {
+    text-decoration: line-through;
+    color: var(--text3);
+  }
+
+  .kcard .edate {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .kcard-sub {
+    display: none;
+    padding: 8px 12px 10px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .kcard-sub.open {
+    display: block;
+  }
+
+  .kcard-sub textarea {
+    width: 100%;
+    min-height: 80px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.6;
+  }
+
+  .kcard-sub .result-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .legacy-section-header {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-left">
+      <h1>Übungen</h1>
+      <p>Weiterbildung · Office Manager / Projektmanagement / Scrum</p>
+    </div>
+    <div>
+      <div class="badge">KI-gestützt</div>
+      <div id="cnt" style="font-size:13px;color:var(--text3);margin-top:6px;text-align:right;"></div>
+    </div>
+  </header>
+
+  <div class="modul-section">
+    <div class="modul-header" onclick="toggleAllKapitel()" style="cursor:pointer;" title="Alle Kapitel auf-/zuklappen">
+      <span class="modul-icon">📁</span>
+      <h2>Modul 1 – Einführung in das klassische Projektmanagement</h2>
+      <span class="modul-meta">44 UE · Mod. 14 &nbsp;▾</span>
+    </div>
+    <div class="kapitel-list" id="kapitel-list"></div>
+  </div>
+
+  <div class="legacy-section-header">Frühere Einträge (KI-Grundlagen & Digital)</div>
+  <div class="filters" id="fbar"></div>
+  <div class="entries" id="list"></div>
+
+  <div class="add-section">
+    <h3>Neuer Eintrag</h3>
+    <div class="add-row">
+      <input type="text" id="nn" placeholder="Thema oder Modulname..." />
+      <select id="nc"></select>
+    </div>
+    <input type="text" id="no" class="add-note" placeholder="Notiz / Kontext (optional)..." />
+    <button class="add-btn" onclick="addE()">+ Hinzufügen</button>
+  </div>
+
+  <footer>uebungen-ordner.html · ChapterNext Weiterbildung 2026</footer>
+</div>
+
+<script>
+var KAPITEL = [
+  {
+    id: "k1",
+    num: 1,
+    title: "Grundlagen des Projektmanagements",
+    subtitle: "Was ist ein Projekt? Was ist PM?",
+    open: true,
+    entries: [
+      {
+        id: 1001,
+        name: "Projektbeschreibung vs. Definition des Projekts",
+        done: false,
+        date: "31.03.2026",
+        note: "PROJEKTBESCHREIBUNG = das WAS\nEine inhaltliche, oft informelle Zusammenfassung, die erklärt, worum es beim Vorhaben geht. Beschreibt Ziel, Kontext und grobe Idee. Kann bereits vor dem offiziellen Projektstart existieren – z.B. als Pitch oder Ideen-Skizze.\n\nDEFINITION DES PROJEKTS = das WIE VERBINDLICH\nLegt fest, dass ein Vorhaben die formalen Kriterien eines Projekts erfüllt (einmalig, zeitlich befristet, klares Ziel, begrenzte Ressourcen, Komplexität). Erst durch die Definition wird aus einer Idee offiziell ein Projekt – mit Projektauftrag, Budget und Verantwortlichkeiten.\n\nKURZFORMEL:\nDie Projektbeschreibung sagt WAS gemacht werden soll.\nDie Projektdefinition sagt DASS es ein Projekt ist und unter welchen Bedingungen es durchgeführt wird.\n\nMERKHILFE: Beschreibung = Idee. Definition = Verbindlichkeit.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1012,
+        name: "Zielhierarchie – Hauptziel, Teilziele & Zielvorgaben",
+        done: false,
+        date: "31.03.2026",
+        note: "DREI EBENEN DER ZIELSETZUNG IM PROJEKT:\n\n── EBENE 1: BESTIMMUNG DES HAUPTZIELS ──\nEin übergeordnetes Ziel, das das angestrebte Ergebnis des Projekts beschreibt.\n→ Das WARUM und WAS des Projekts auf höchster Ebene.\nBeispiel Softwareprojekt: Entwicklung einer benutzerfreundlichen und funktionsreichen Lösung.\nBeispiel Wissensdatenbank: Eine zentrale, durchsuchbare Wissensdatenbank, die alle 500 MA in Echtzeit mit geprüften Antworten versorgt.\n\n── EBENE 2: FESTLEGUNG VON TEILZIELEN ──\nNeben dem Hauptziel werden Meilensteine definiert, die zur Erreichung des Hauptziels erforderlich sind.\nTeilziele gliedern das Projekt in kleinere Schritte und machen den Fortschritt messbar.\nBeispiel Bauprojekt: Fertigstellung der Rohbauarbeiten.\nBeispiel Wissensdatenbank:\n• Teilziel 1: Anforderungsanalyse abgeschlossen\n• Teilziel 2: Software ausgewählt und konfiguriert\n• Teilziel 3: Pilotbetrieb erfolgreich\n• Teilziel 4: Alle 500 MA geschult\n\n── EBENE 3: SPEZIFISCHE ZIELVORGABEN ──\nZiele werden präzise und messbar formuliert – mit Angaben zu Zeitvorgaben, Budget, Qualität oder anderen quantifizierbaren Kriterien.\n→ Das ist die SMART-Ebene der Zieldefinition.\nBeispiel: Fertigstellung des Projekts innerhalb von 6 Monaten.\nBeispiel Wissensdatenbank:\n• Einarbeitungszeit neuer MA um 40% reduzieren\n• Fehlerquote im Kundenkontakt um 25% senken\n• Nutzungsrate >80% innerhalb von 4 Wochen nach Rollout\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDIE SCHLÜSSELFRAGE ZUR ZIELDEFINITION:\n'Kannst Du das geplante Ziel überhaupt erreichen, oder ist es bereits zu Beginn zum Scheitern verurteilt?'\n→ Diese Frage führt direkt zu SMART-Zielen und der Risikoanalyse.\n\nVERBINDUNG ZU ANDEREN EINTRÄGEN:\n• Hauptziel → steht im Projektauftrag (Eintrag 1)\n• Teilziele → werden zu Milestones (Eintrag 8)\n• Zielvorgaben → werden zu KPIs gemessen (Eintrag 9)\n• Alle drei Ebenen müssen im Magischen Dreieck realistisch sein (Eintrag 7)",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1010,
+        name: "Ressourcenrückführung – Projektabschluss",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION:\nRessourcenrückführung bezeichnet den geordneten Prozess, mit dem am Ende eines Projekts alle eingesetzten Ressourcen wieder in ihre ursprüngliche Verwendung oder in neue Aufgaben überführt werden.\n\nWAS WIRD ZURÜCKGEFÜHRT?\n• Personal: Projektmitglieder kehren in ihre Linienfunktion zurück oder werden neuen Projekten zugewiesen\n• Budget: Nicht verbrauchte Mittel werden freigegeben und dem Auftraggeber / Controlling zurückgemeldet\n• Sachmittel: Geräte, Lizenzen, Räumlichkeiten werden zurückgegeben oder neu zugewiesen\n• Externe Partner: Verträge mit Lieferanten und Dienstleistern werden beendet\n\nWANNIM PROJEKTZYKLUS:\nPhase 4 – Projektabschluss:\n1. Projektergebnis abnehmen\n2. Dokumentation abschließen\n3. Lessons Learned festhalten\n4. RESSOURCENRÜCKFÜHRUNG durchführen\n5. Projektorganisation formal auflösen\n\nWARUM WICHTIG?\n• Verbindung zu den 7 Projektbedingungen: Temporäre Strukturen werden aufgelöst → das ist der Beweis, dass das Projekt wirklich beendet ist\n• Ohne saubere Rückführung: Ressourcen bleiben im Projekt 'hängen', andere Projekte leiden darunter\n• Besonders im Multiprojektmanagement kritisch: eine Person blockiert in zwei Projekten gleichzeitig Kapazität\n\nBEISPIEL WISSENSDATENBANK:\n• IT-Mitarbeitende: kehren in regulären IT-Betrieb zurück, übernehmen nun Pflege der Datenbank als Linienaufgabe\n• Projektleiterin: wird für nächstes Projekt oder Linienrolle freigegeben\n• Softwarelizenzen: Projektlizenz wird in Dauerlizenz umgewandelt (kein Rückgabe-Fall hier)\n• Restbudget (ca. 4.000 €): wird ans Controlling zurückgemeldet\n• Externe Beratung: Vertrag mit UX-Agentur nach Abnahme beendet",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1011,
+        name: "Fazit Kapitel 1 – Grundlagen des Projektmanagements",
+        done: false,
+        date: "31.03.2026",
+        note: "FAZIT AUS DEM KURS:\nDie Lerneinheit zu den Grundlagen im Projektmanagement vermittelt die Definition, Bedeutung und Schlüsselbegriffe des Projektmanagements. Sie legt den Fokus auf:\n• Die Ziele des Projektmanagements\n• Die Bedeutung einer strukturierten Projektplanung\n• Die Vorteile einer professionellen Projektmanagementpraxis\n• Anwendungsbereiche in verschiedenen Branchen\n• Die Rolle von Projektzielen, Ressourcenmanagement und Stakeholder-Engagement\n\nWAS ICH IN KAPITEL 1 GELERNT HABE (9 Einträge):\n1. Projektbeschreibung vs. Definition des Projekts\n2. PM-Canvases zur Projektpräsentation\n3. Die 7 Bedingungen eines Projekts\n4. Die 5 Inhalte einer Projektbeschreibung\n5. Die 4 Projektphasen & Priorisierung\n6. Die 6 Projektbeschränkungen\n7. Das Magische Dreieck & Zielsetzung\n8. Milestone – Definition & Funktion\n9. KPIs im Projektmanagement\n10. Ressourcenrückführung\n\nROTER FADEN DURCH KAPITEL 1:\nProjektidee → Projektbeschreibung (5 Inhalte) → Projektdefinition (7 Bedingungen) → Projektauftrag → Phasen (4) → Steuerung mit Milestones & KPIs → Abschluss mit Ressourcenrückführung\n\nALLES DURCH DAS MAGISCHE DREIECK ZUSAMMENGEHALTEN:\nZeit ↔ Kosten ↔ Umfang → Qualität als Ergebnis",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1008,
+        name: "Milestone (Meilenstein) – Definition & Funktion",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION (aus dem Kurs):\nEin Milestone ist ein bedeutender Punkt oder ein Ereignis innerhalb eines Projekts, der als wichtiger Fortschritt bzw. als Erreichung eines Teilziels markiert wird. Er dient als Referenzpunkt für die Überprüfung des Projektfortschritts und ermöglicht eine bessere Kontrolle und Planung des weiteren Vorgehens.\n\nFUNKTION IM PROJEKT:\n• Markieren wichtige Etappen im Projektverlauf\n• Ermöglichen allen Beteiligten, immer auf dem Laufenden zu bleiben\n• Helfen, Zeitplan und Ressourcen zu überblicken und anzupassen\n• Dienen als Kontrollpunkte zwischen Projektphasen\n\nWICHTIG – WARUM MILESTONES UNVERZICHTBAR SIND:\nTeilerrungenschaften und der Projektabschluss bilden die Richtwerte für das komplette Projekt. Ohne klar definierte Ziele besteht die Gefahr von:\n• Missverständnissen\n• Ineffektiver Arbeit\n• Orientierungslosigkeit\n→ Das kann zu Verzögerungen, Fehlern und letztendlich zum Scheitern des Projekts führen.\n\nSTAKEHOLDER & MILESTONES:\nDie Einbeziehung der Stakeholder in den Zielsetzungsprozess ermöglicht es, deren Perspektiven, Anliegen und Bedürfnisse angemessen zu berücksichtigen.\n\nBEISPIELE FÜR MILESTONES:\n• Fertigstellung der Entwurfsphase\n• Beginn der Bauarbeiten\n• Abnahme bestimmter Projektabschnitte\n\nBEISPIEL WISSENSDATENBANK:\nMS 1 (30.04.): Projektauftrag genehmigt\nMS 2 (15.06.): Softwareauswahl abgeschlossen\nMS 3 (31.07.): Pilotbetrieb mit Team 1 erfolgreich abgeschlossen\nMS 4 (30.09.): Rollout auf alle 500 MA abgeschlossen\nMS 5 (31.10.): Projektabnahme durch Auftraggeber\n\nUNTERSCHIED MILESTONE vs. AUFGABE:\nAufgabe = etwas TUN (z.B. Schulungen durchführen)\nMilestone = etwas ERREICHT HABEN (z.B. alle Schulungen abgeschlossen)\nMilestones haben keine Dauer – sie sind ein Punkt in der Zeit.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1009,
+        name: "KPIs im Projektmanagement – Definition & häufigste Beispiele",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION (aus dem Kurs):\nKPIs (Key Performance Indicators) sind messbare Kennzahlen, die verwendet werden, um den Fortschritt und den Erfolg eines Projekts zu überwachen und zu bewerten. Sie dienen dazu, die Leistung und Zielerreichung des Projekts zu messen. Die spezifischen KPIs können je nach Art des Projekts variieren.\n\nDIE HÄUFIGSTEN KPIs IM PROJEKTMANAGEMENT:\n\n── ZEIT & FORTSCHRITT ──\n• Termintreue (Schedule Performance Index / SPI)\n  Werden Meilensteine und Deadlines eingehalten?\n  SPI > 1 = voraus, SPI < 1 = im Verzug\n• Projektfortschritt (%)\n  Wie viel % der Arbeitspakete sind abgeschlossen?\n\n── KOSTEN ──\n• Budgeteinhaltung (Cost Performance Index / CPI)\n  CPI > 1 = unter Budget, CPI < 1 = über Budget\n• Kostenabweichung (Cost Variance / CV)\n  Geplante Kosten minus tatsächliche Kosten\n• Earned Value (EV)\n  Wert der tatsächlich geleisteten Arbeit im Verhältnis zum Plan\n\n── QUALITÄT ──\n• Fehlerquote / Defect Rate\n  Anzahl Fehler pro Lieferergebnis oder Zeitraum\n• Nacharbeitsquote (Rework Rate)\n  Anteil der Arbeit, die wiederholt werden musste\n• Kundenzufriedenheit (z.B. NPS oder Abnahmequote)\n\n── RESSOURCEN & TEAM ──\n• Ressourcenauslastung (%)\n  Wie stark sind Mitarbeitende ausgelastet? (Ziel: 70–85%)\n• Teamzufriedenheit\n  Regelmäßige kurze Umfragen im Team\n\n── RISIKO ──\n• Anzahl offener Risiken\n• Anteil eingetretener Risiken vs. geplanter Gegenmaßnahmen\n\n── STAKEHOLDER ──\n• Stakeholder-Engagement-Rate\n  Wie aktiv beteiligen sich Stakeholder an Reviews und Entscheidungen?\n\nBEISPIEL WISSENSDATENBANK:\n• Einarbeitungszeit neuer MA: Ziel -40% (Ist: -38%) → fast erreicht ✓\n• Fehlerquote im Kundenkontakt: Ziel -25%\n• Nutzungsrate der Datenbank: Ziel >80% der MA täglich\n• Rollout-Termintreue: Ziel 100% bis 30.09.\n\nMERKSATZ:\nEin KPI ohne Zielwert ist wertlos – immer SOLL vs. IST messen.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1007,
+        name: "Das Magische Dreieck – Zielsetzung im PM",
+        done: false,
+        date: "31.03.2026",
+        note: "DAS MODELL:\nDrei Ecken des Dreiecks:\n• UMFANG (oben)  – Was soll erreicht werden?\n• ZEIT (unten links) – Bis wann?\n• KOSTEN (unten rechts) – Mit welchem Budget?\nIn der MITTE: QUALITÄT – sie ist das Ergebnis des Gleichgewichts aller drei Faktoren.\n\nDAS ZIEL IM PM:\nDas Magische Dreieck in Balance zu halten und einen optimalen Kompromiss zwischen Zeit, Kosten und Umfang zu finden. Daraus resultiert letztendlich die Gesamtqualität.\n\nDAS BESONDERE:\nVeränderungen in einem der Faktoren haben Auswirkungen auf die anderen beiden.\n→ Kein Faktor kann isoliert verändert werden.\n\nWECHSELWIRKUNGEN (Beispiele aus dem Kurs):\n• Zeit wird verkürzt → höhere Kosten ODER reduzierter Umfang → beeinträchtigt möglicherweise die Qualität\n• Budget wird reduziert → beeinflusst Zeitplanung ODER Qualität\n• Umfang wird erweitert → braucht mehr Zeit UND mehr Kosten\n\nBEISPIEL WISSENSDATENBANK:\nAusgangslage: 80.000 € Budget, Deadline Oktober, Umfang: 500 MA in DE\n→ Szenario A: Rollout soll 2 Monate früher fertig sein\n   = entweder mehr Personal (→ Kosten steigen) oder weniger Funktionen (→ Umfang sinkt)\n→ Szenario B: Budget wird auf 60.000 € gekürzt\n   = entweder Zeitplan verlängern oder Schulungsumfang reduzieren (→ Qualität leidet)\n→ Szenario C: Umfang wird auf 3 Sprachen erweitert\n   = mehr Zeit + mehr Kosten zwingend notwendig\n\nVERBINDUNG ZU EINTRAG 6 (6 Projektbeschränkungen):\nDas Magische Dreieck ist die BASIS-Version (3 Faktoren).\nDie 6 Beschränkungen (Zeit, Umfang, Kosten, Qualität, Risiko, Ressourcen) sind die ERWEITERTE Version.\nBeide Modelle beschreiben dasselbe Grundprinzip: im PM gibt es keine kostenlosen Kompromisse.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1006,
+        name: "Die 6 Projektbeschränkungen (Erweitertes Magisches Dreieck)",
+        done: false,
+        date: "31.03.2026",
+        note: "Jedes Projekt bewegt sich innerhalb von 6 Beschränkungen. Eine sorgfältige Planung und das Management dieser Beschränkungen sind entscheidend, um das Projektziel zu erreichen.\n\nDAS KLASSISCHE MAGISCHE DREIECK (Basis):\nZeit ↔ Kosten ↔ Qualität/Umfang\n→ Ändert sich eine Größe, wirkt sich das auf die anderen aus.\nBeispiel: Mehr Umfang = mehr Zeit + mehr Kosten.\n\nDIE ERWEITERTE VERSION – 6 FAKTOREN:\n\n01 | ZEIT\nVariablen: Zeitplan, verfügbare Arbeitsstunden, interne Terminkalender, Anzahl der Projektphasen.\nBeispiel Wissensdatenbank: Rollout muss bis Oktober abgeschlossen sein – Urlaubszeiten im August reduzieren verfügbare Kapazität.\n\n02 | UMFANG\nBeschreibt die Größe des Projekts in Bezug auf Qualität, Genauigkeit und erzielte Ergebnisse.\nVom Umfang hängen Zeit und Kosten direkt ab – größere Projekte erfordern mehr von beidem.\nBeispiel: Wird die Wissensdatenbank auf 3 Sprachen ausgebaut, steigen Aufwand und Budget sofort.\n\n03 | KOSTEN\nBeinhalten das gesamte Projektbudget: Projektkosten, Gehälter, Materialkosten, Mietkosten für Räumlichkeiten.\nBeispiel: 80.000 € Budget – überschreiten durch Softwarewechsel würde Projektauftrag gefährden.\n\n04 | QUALITÄT\nIst das Endergebnis UND gleichzeitig eine eigene Beschränkung.\nFaktoren wie mangelnde Kommunikation oder häufige Änderungen können die Qualität direkt beeinträchtigen.\nBeispiel: Werden Inhalte der Wissensdatenbank nicht geprüft, sinkt die Qualität → Nutzerakzeptanz leidet.\n\n05 | RISIKO\nUnerwartete Ereignisse: erschöpfte Ressourcen, schlechte Leistung, unklare Anforderungen, hohe Kosten, Zeitdruck.\nDurch Risikoanalysen und Risikomanagement-Strategien können Risiken identifiziert und bewältigt werden.\nBeispiel: Softwareanbieter liefert zu spät → Risikoregister hatte diesen Fall als 'mittel' eingestuft → Ausweichplan aktivieren.\n\n06 | RESSOURCEN\nMitarbeiter, Ausrüstung, Material, Räumlichkeiten – eng mit Kostenbeschränkungen verbunden.\nOhne angemessene Zuweisung und Verwaltung: geringere Qualität, höhere Kosten, Verzögerungen.\nBeispiel: 2 IT-Mitarbeitende sind parallel in einem anderen Projekt → Ressourcenkonflikt muss im Multiprojektmanagement gelöst werden.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDER KERN: WECHSELWIRKUNGEN\nKeine Beschränkung steht allein. Jede Änderung zieht Kettenreaktionen nach sich:\n→ Mehr Umfang = mehr Ressourcen = mehr Kosten = mehr Zeit\n→ Weniger Budget = weniger Ressourcen = weniger Umfang oder weniger Qualität\n→ Mehr Risiko = potentiell mehr Kosten und weniger Qualität\n\nAufgabe der Projektleiterin: Diese 6 Faktoren permanent im Gleichgewicht halten und Abweichungen frühzeitig kommunizieren.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1005,
+        name: "Die 4 Projektphasen & Priorisierung (Projektlebenszyklus)",
+        done: false,
+        date: "31.03.2026",
+        note: "Das klassische PM unterteilt jedes Projekt in 4 aufeinander aufbauende Phasen – wie Zahnräder, die ineinandergreifen. Der Übergang von einer Phase zur nächsten wird meist durch einen MEILENSTEIN (= definierter, messbarer Zwischenerfolg als Kontrollpunkt) markiert.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚙️ PHASE 1 | PROJEKTINITIIERUNG\nWas passiert: Das Projekt wird formal ins Leben gerufen. Idee wird geprüft, Machbarkeit bewertet, Projektauftrag erstellt, Projektleitung benannt.\nDokumente: Projektbeschreibung, Projektantrag, Projektauftrag, erste Stakeholderanalyse\nErgebnis/Meilenstein: Genehmigter Projektauftrag → Projekt ist offiziell autorisiert\n\nBEISPIEL WISSENSDATENBANK:\nGeschäftsführung genehmigt das Vorhaben. Projektleiterin (TL Customer Service) wird benannt. Budget von 80.000 € freigegeben. Kick-off-Termin festgelegt.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚙️ PHASE 2 | PROJEKTPLANUNG\nWas passiert: Das WIE wird detailliert ausgearbeitet. Zeitplan, Ressourcenplanung, Budgetplanung, Risikoanalyse, Kommunikationsplan.\nDokumente: Projektstrukturplan (PSP), Gantt-Diagramm, Risikoregister, Ressourcenplan\nErgebnis/Meilenstein: Freigegebener Projektplan → Alle wissen, wer was bis wann macht\n\nBEISPIEL WISSENSDATENBANK:\nIT plant technische Infrastruktur. HR plant Schulungskonzept für 500 MA. Softwareanbieter werden verglichen. Zeitplan mit 5 Phasen wird erstellt und vom Auftraggeber abgenommen.\n\nPRIORISIERUNG IN DER PLANUNGSPHASE:\nNicht alles kann gleichzeitig umgesetzt werden → Priorisierung ist Pflicht.\nGängige Methoden:\n• MoSCoW-Methode: Must have / Should have / Could have / Won't have\n• Eisenhower-Matrix: Wichtigkeit vs. Dringlichkeit\n• Nutzwertanalyse: Kriterien gewichten und Optionen bewerten\n• Dot Voting im Team: demokratische Schnellpriorisierung\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚙️ PHASE 3 | PROJEKTSTEUERUNG\n(nicht nur 'Durchführung' – betont aktives Eingreifen!)\nWas passiert: Der Plan wird umgesetzt UND laufend überwacht. Abweichungen werden erkannt und korrigiert. Änderungen werden gesteuert (Change Management).\nDokumente: Statusberichte, Fortschrittsberichte, Änderungsanträge, Risikoprotokoll\nErgebnis/Meilenstein: Alle Arbeitspakete abgeschlossen, Projektergebnis abgenommen\n\nBEISPIEL WISSENSDATENBANK:\nPilotbetrieb mit Team 1 zeigt: Suchfunktion wird kaum genutzt → Steuerungsmaßnahme: UX-Workshop eingeschoben, Benutzeroberfläche angepasst. Zeitplan verschiebt sich um 2 Wochen → Auftraggeber wird informiert, Pufferzeit aktiviert.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚙️ PHASE 4 | PROJEKTABSCHLUSS\nWas passiert: Das Projekt wird formal beendet. Ergebnisse übergeben, Abschlussbericht erstellt, Lessons Learned dokumentiert, Projektteam aufgelöst.\nDokumente: Projektabschlussbericht, Übergabeprotokoll, Lessons-Learned-Dokumentation, Nachkalkulation\nErgebnis/Meilenstein: Abnahme durch Auftraggeber + formale Auflösung der Projektorganisation\n\nBEISPIEL WISSENSDATENBANK:\nAlle 500 MA arbeiten mit der Datenbank. Übergabe an IT-Betrieb (wird zur Routineaufgabe). Abschlussbericht: Einarbeitungszeit um 38 % gesenkt (Ziel: 40 % – nah dran). Lessons Learned: Pilotphase hätte länger sein sollen.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWICHTIGER GRUNDSATZ ZUR PRIORISIERUNG:\nIn JEDER Phase muss priorisiert werden – aber der Fokus verschiebt sich:\nInitiierung → Was ist überhaupt machbar?\nPlanung    → Was kommt zuerst? (MoSCoW, Eisenhower)\nSteuerung  → Was ist jetzt gerade kritisch? (Kritischer Pfad)\nAbschluss  → Was war wirklich wichtig? (Lessons Learned)",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1002,
+        done: false,
+        date: "31.03.2026",
+        note: "Eine Projektbeschreibung enthält 5 Pflichtbestandteile. Sie ist kein verbindliches Dokument, aber die Grundlage für den späteren Projektauftrag.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n01 | RAHMENDATEN ZUM PROJEKT\nTitel, Kurzbeschreibung, geplantes Start- und Enddatum sowie Informationen zum Auftraggeber.\n\nBEISPIEL:\nTitel: Einführung einer Wissensdatenbank\nKurzbeschreibung: Aufbau und Implementierung einer zentralen Wissensdatenbank für den telefonischen und E-Mail-Kundensupport.\nStart: 01.05.2026 | Ende: 31.10.2026\nAuftraggeber: Geschäftsführung / Leitung Customer Service\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n02 | ROLLENVERTEILUNG IM PROJEKTTEAM\nBudget-Verantwortliche, Kunden-Kommunikation, Zuständigkeiten der Teammitglieder und Stakeholder.\n\nBEISPIEL:\nProjektleitung: Teamleitung Customer Service\nBudget-Verantwortung: CFO / Controlling\nFachbereich: IT (technische Umsetzung), HR (Change Management)\nStakeholder: 500 Mitarbeitende im Kundenkontakt, Teamleiter, Qualitätsmanagement\nExterner Partner: Softwareanbieter der Wissensdatenbank\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n03 | IDEE UND ZIEL DES PROJEKTS\nBesonders wichtig: die Beteiligten überzeugen, wohin die Zusammenarbeit führt und worauf hingearbeitet wird.\n\nBEISPIEL:\nProblem: Wissen ist derzeit auf Excel-Listen, E-Mail-Verläufe und Köpfe einzelner Mitarbeitender verteilt. Neue Kolleginnen brauchen Wochen bis zur Handlungsfähigkeit.\nZiel: Eine zentrale, durchsuchbare Wissensdatenbank, die alle 500 Mitarbeitenden in Echtzeit mit geprüften Antworten und Prozessen versorgt.\nErfolgsindikator (KPI): Reduzierung der durchschnittlichen Einarbeitungszeit um 40 %, Senkung der Fehlerquote im Kundenkontakt um 25 %.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n04 | ZIELGRUPPE\nDefinition der Zielgruppe des Auftraggebers und deren Einwirkung auf das Projekt.\n\nBEISPIEL:\nPrimäre Zielgruppe: Alle 500 Mitarbeitenden mit telefonischem und E-Mail-Kundenkontakt\nSekundäre Zielgruppe: Teamleiter (Pflege & Freigabe von Inhalten), Qualitätsmanagement (Prüfung der Einträge)\nEinwirkung: Die Akzeptanz der Mitarbeitenden ist erfolgskritisch – ohne aktive Nutzung scheitert das System. Change Management ist Pflichtbestandteil.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n05 | ABLAUF DES PROJEKTS\nDetaillierte Beschreibung des Vorgehens, konkrete Zeitpläne oder To-do-Listen des Projektteams.\n\nBEISPIEL:\nPhase 1 (Mai): Anforderungsanalyse – Interviews mit Mitarbeitenden & Teamleitern, Bestandsaufnahme vorhandenen Wissens\nPhase 2 (Juni): Softwareauswahl & Pilotbetrieb mit 1 Team (20 Personen)\nPhase 3 (Juli–Aug): Befüllung der Datenbank, Schulungen, Feedbackschleifen\nPhase 4 (Sep): Rollout auf alle 500 Mitarbeitenden\nPhase 5 (Okt): Stabilisierungsphase, Abschlussdokumentation, Projektabschluss\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nVERBINDUNG ZU EINTRAG 1:\nDiese 5 Punkte = die PROJEKTBESCHREIBUNG (informell, noch kein Auftrag).\nErst wenn daraus ein formaler PROJEKTAUFTRAG wird, ist das Projekt offiziell definiert und autorisiert.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1003,
+        done: false,
+        date: "31.03.2026",
+        note: "Ein Vorhaben ist erst dann ein PROJEKT, wenn ALLE folgenden 7 Bedingungen erfüllt sind:\n\n1. DEFINIERTES ZIEL\nDas Ergebnis ist klar beschrieben – nicht vage, sondern messbar und vereinbart.\nBeispiel: 'Einführung eines neuen CRM-Systems bis 30.06.' – kein Ziel wäre: 'wir wollen digitaler werden'.\n\n2. ZEITLICH BEGRENZT\nEs gibt einen definierten Start- und Endtermin.\nProjekte enden – im Gegensatz zu Daueraufgaben im Tagesgeschäft.\n\n3. RESSOURCENBEGRENZT\nBudget, Personal und Sachmittel sind begrenzt und vorab festgelegt.\nDie Ressourcenplanung ist damit eine der Kernaufgaben im PM.\n\n4. NEU UND EINMALIG\nDas Vorhaben hat so noch nicht stattgefunden – es ist kein Routinevorgang.\nJedes Projekt ist ein Unikat, auch wenn ähnliche Projekte schon durchgeführt wurden.\n\n5. KOMPLEX\nEs gibt viele Abhängigkeiten, Beteiligte und Einflussfaktoren, die koordiniert werden müssen.\nEinfache Aufgaben sind keine Projekte – Komplexität rechtfertigt den PM-Aufwand.\n\n6. TEMPORÄRE STRUKTUREN\nFür das Projekt wird eine eigene, vorübergehende Organisation aufgebaut (Projektteam, Projektleitung).\nNach Projektabschluss wird diese Struktur wieder aufgelöst.\n\n7. PROJEKTSPEZIFISCHE ORGANISATIONSFORM\nEs gibt eine klare Zuordnung: Wer leitet? Wer entscheidet? Wer arbeitet mit?\nDiese Struktur ist projektbezogen und unterscheidet sich von der normalen Linienorganisation.\n\nMERKHILFE (Eselsbrücke):\nD-Z-R-N-K-T-O\n'Dein Ziel Rettet Neue Komplexe Temporäre Organisationen'\n\nWICHTIG: Fehlt auch nur EINE dieser 7 Bedingungen, handelt es sich formal NICHT um ein Projekt – sondern z.B. um eine Aufgabe, einen Auftrag oder einen Prozess.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 1004,
+        done: false,
+        date: "31.03.2026",
+        note: "Canvas = visuelle Einseiter-Vorlage, die komplexe Sachverhalte strukturiert auf einer Seite darstellt. Im PM werden sie zur Kommunikation, Planung und Präsentation genutzt.\n\n── 1. PROJECT CANVAS ──\nZweck: Gesamtüberblick über ein Projekt auf einer Seite\nInhalte: Ziel, Stakeholder, Ressourcen, Risiken, Zeitplan, Erfolgskriterien\nWann: Projektstart / Kick-off / Präsentation gegenüber Auftraggeber\nVorteil: Alle Beteiligten sehen sofort das große Ganze\n\n── 2. BUSINESS MODEL CANVAS (BMC) ──\nEntwickler: Alexander Osterwalder (2008)\nZweck: Geschäftsmodell strukturiert darstellen und diskutieren\nInhalte: 9 Felder – Kundensegmente, Wertangebote, Kanäle, Kundenbeziehungen, Einnahmequellen, Schlüsselressourcen, Schlüsselaktivitäten, Schlüsselpartner, Kostenstruktur\nWann: Projektideen mit Geschäftsmodellcharakter, Startups, neue Produktlinien\n\n── 3. LEAN CANVAS ──\nAbwandlung des BMC, fokussierter auf Probleme & Lösungen\nInhalte: Problem, Lösung, einzigartiges Wertangebot, unfairer Vorteil, Kundensegmente, Kanäle, Kennzahlen, Kostenstruktur, Einnahmequellen\nWann: Frühe Projektphasen, wenn noch viele Annahmen unbewiesen sind\n\n── 4. VALUE PROPOSITION CANVAS ──\nEbenfalls von Osterwalder\nZoom auf: Kundenjobs / Pains / Gains ↔ Produkt / Pain Relievers / Gain Creators\nWann: Wenn der Nutzen des Projektergebnisses für Stakeholder klar definiert werden muss\n\n── 5. STAKEHOLDER CANVAS ──\nVisualisiert alle Projektbeteiligten nach Einfluss und Interesse\nHilft bei der Kommunikationsstrategie im Projekt\n\nFAZIT FÜR DEN PM-ALLTAG:\nProject Canvas → Projektüberblick\nBusiness Model Canvas → Geschäftsmodell\nLean Canvas → frühe Ideenphase\nValue Proposition Canvas → Nutzen für Kunden/Stakeholder",
+        open: true,
+        generated: false
+      }
+    ]
+  },
+  {
+    id: "k2",
+    num: 2,
+    title: "Vorgehensmodelle / Methoden",
+    subtitle: "Klassisch · Agil · Hybrid",
+    open: true,
+    entries: [
+      {
+        id: 2001,
+        name: "Definition Vorgehensmodelle",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION (aus dem Kurs):\nVorgehensmodelle sind strukturierte Ansätze, die helfen, Projekte zu organisieren und durchzuführen. Sie teilen das Projekt in Phasen oder Schritte auf und geben an, was in jeder Phase gemacht werden muss.\n\nVorgehensmodelle helfen dabei:\n• Den Projektablauf zu planen\n• Risiken zu erkennen\n• Den Fortschritt zu überwachen\n\nDIE 3 HAUPTTYPEN (Überblick):\n1. KLASSISCH / PLANGETRIEBEN (z.B. Wasserfall)\n   → Phasen werden sequenziell durchlaufen, alles wird vorab geplant\n   → Gut wenn: Anforderungen klar & stabil sind\n\n2. AGIL (z.B. Scrum, Kanban)\n   → Iterativ, flexibel, in kurzen Zyklen (Sprints)\n   → Gut wenn: Anforderungen sich ändern oder unklar sind\n\n3. HYBRID\n   → Kombination aus klassisch & agil, je nach Projektphase\n   → Gut wenn: Teile des Projekts planbar, andere flexibel sind\n\nWARUM VORGEHENSMODELLE WICHTIG SIND:\nOhne strukturiertes Vorgehensmodell fehlt die gemeinsame Sprache im Team – jeder arbeitet nach eigenem Verständnis, was zu Chaos, Doppelarbeit und Fehlern führt.\n\nVERBINDUNG ZU KAPITEL 1:\nDie 4 Projektphasen (Initiierung → Planung → Steuerung → Abschluss) sind selbst ein klassisches Vorgehensmodell – der Projektlebenszyklus.",
+        open: false,
+        generated: false
+      },
+      {
+        id: 2002,
+        name: "Das Phasenmodell",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION:\nDas Phasenmodell ist wie eine Schritt-für-Schritt-Reise für Projekte. Es startet mit der Anforderungsanalyse, dann folgt die Planung, die Umsetzung, das Testen und schließlich die Wartung.\n\nJede Phase hat spezifische Aufgaben und Ziele, die erreicht werden müssen, um das Projekt erfolgreich abzuschließen.\n\nDas Modell hilft:\n• Das Projekt zu organisieren\n• Den Fortschritt zu überwachen\n• Sicherzustellen, dass die Ziele erreicht werden\n\nDIE 5 PHASEN (aus dem Kurs):\n1. Projektinitialisierung\n2. Projektplanung\n3. Projektdurchführung\n4. Projektleistung\n5. Projektabschluss\n\nBESONDERHEIT – VERSCHACHTELUNG:\nDie Phasen bauen aufeinander auf und sind leicht versetzt – wie Zahnräder. Neue Phase beginnt, bevor die vorherige ganz abgeschlossen ist (Überlappung möglich).\n\nVERHÄLTNIS ZU ANDEREN MODELLEN:\nDas Phasenmodell ist der OBERBEGRIFF.\nWasserfall, V-Modell und Spiralmodell sind SPEZIFISCHE Ausprägungen des Phasenmodells.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2003,
+        name: "Das Wasserfallmodell",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION:\nDas Wasserfallmodell ist eine spezifische Form des Phasenmodells, bei dem die Projektphasen strikt nacheinander abgearbeitet werden – wie eine Treppe, auf der man Schritt für Schritt nach unten geht.\n\nABLAUF (typische Phasen):\n1. Anforderungsanalyse\n2. Planung\n3. Beschaffung\n4. Umsetzung / Implementierung\n5. Testen\n6. Inbetriebnahme\n\nMERKMALE:\n• Lineares Modell – eine Phase nach der anderen\n• Jede Phase baut auf der vorherigen auf\n• Keine Rücksprünge vorgesehen\n• Gut für Projekte mit stabilen, klar definierten Anforderungen\n\n⚠️ MERKE (aus dem Kurs):\nDie Phasennamen müssen nicht immer genau dieselben sein – sie variieren je nach Projekt oder Branche. In der Regel haben die Phasen jedoch ähnliche Ziele und Aktivitäten.\n→ NICHT alle Phasen auswendig lernen!\n→ Kernprinzip merken: Jede Phase baut auf der vorherigen auf, lineare Abfolge.\n\nVORTEILE:\n• Klare Struktur und Planung\n• Einfach zu verstehen und zu managen\n• Gut dokumentierbar\n\nNACHTEILE:\n• Sehr unflexibel bei Änderungen\n• Fehler aus frühen Phasen werden oft erst spät entdeckt\n• Kein fertiges Ergebnis bis zum Ende sichtbar\n\nBEISPIEL WISSENSDATENBANK:\nAnforderungsanalyse → Softwareauswahl → Beschaffung Lizenz → Implementierung → Test mit Pilotteam → Inbetriebnahme für alle 500 MA\n→ Klassischer Wasserfall-Ablauf, aber in der Praxis mit Feedback-Schleifen ergänzt.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2004,
+        name: "Das V-Modell",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION:\nDas V-Modell ist eine Erweiterung des Wasserfallmodells – mit dem entscheidenden Unterschied: Jeder Entwicklungsphase (linke Seite des V) ist direkt eine Testphase (rechte Seite) zugeordnet.\n\nDER V-AUFBAU (von oben nach unten, dann hoch):\nLINKE SEITE (Entwicklung):        RECHTE SEITE (Verifikation/Test):\nAnforderungsdefinition     ←→    Abnahmetest\nFunktionaler Systementwurf ←→    Systemtest\nTechnischer Systementwurf  ←→    Integrationstest\nKomponentenspezifikation   ←→    Komponententest\n              ↓\n         Programmierung (Tiefpunkt des V)\n\nDAS PRINZIP:\n• Links: Was soll gebaut werden? (Spezifikation)\n• Unten: Es wird gebaut (Implementierung)\n• Rechts: Entspricht das Gebaute der Spezifikation? (Validierung)\n• Jede linke Phase hat eine direkte Testphase auf der rechten Seite\n\nVALIDIERUNG vs. VERIFIKATION:\n• Verifikation: Bauen wir das Produkt richtig? (technische Korrektheit)\n• Validierung: Bauen wir das richtige Produkt? (Kundenwunsch erfüllt?)\n\nVORTEILE:\n• Fehler werden früh durch klare Test-Zuordnung erkannt\n• Sehr hohe Qualitätssicherung\n• Klare Verantwortlichkeiten\n\nNACHTEILE:\n• Sehr starr und dokumentationsintensiv\n• Wenig Flexibilität bei Änderungen\n• Teuer bei nachträglichen Korrekturen\n\nTYPISCHE EINSATZBEREICHE:\nLuft- und Raumfahrt, Medizintechnik, Automotive, Behörden – überall wo Sicherheit und Dokumentation höchste Priorität haben.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2016,
+        name: "Stacey: Perspektiven × Vorgehensmodelle – Vergleichstabelle",
+        done: false,
+        date: "31.03.2026",
+        note: "WIE WIRKT SICH JEDE PERSPEKTIVE AUF DIE WAHL DES VORGEHENSMODELLS AUS?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nKLASSISCHE VORGEHENSWEISE:\n\nFaktisch      → Betont detaillierte Planung und Datensammlung\nVisionär      → Legt großen Wert auf eine klare Vision zu Beginn des Projekts\nAnalytisch    → Betont eine gründliche Analyse und Planung\nBeziehung     → Kann eine sequenzielle und hierarchische Struktur aufweisen\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nAGILE VORGEHENSWEISE:\n\nFaktisch      → Betont schnelle Anpassung an neue Informationen und kontinuierliche Verbesserung\nVisionär      → Fördert eine gemeinsame Vision und kontinuierliche Ausrichtung\nAnalytisch    → Basierend auf Erfahrungen und Feedback\nBeziehung     → Flexiblere Kommunikation und Zusammenarbeit\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nHYBRIDE VORGEHENSWEISE:\n\nFaktisch      → Kombiniert Elemente beider Vorgehensweisen basierend auf den Anforderungen des Projekts\nVisionär      → Kombiniert die Vorteile einer klaren Vision und einer flexiblen Anpassung\nAnalytisch    → Kombiniert analytische Planung mit agiler Anpassungsfähigkeit\nBeziehung     → Bietet eine angepasste und abgestimmte Kommunikation und Zusammenarbeit\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nGESAMTÜBERBLICK AUF EINEN BLICK:\n\nPerspektive   | Klassisch              | Agil                        | Hybrid\nFaktisch      | Planung & Daten        | Schnelle Anpassung          | Beides je nach Bedarf\nVisionär      | Klare Vision am Anfang | Gemeinsame laufende Vision  | Vision + Flexibilität\nAnalytisch    | Gründliche Analyse     | Erfahrung & Feedback        | Analyse + Agilität\nBeziehung     | Hierarchisch/sequenz.  | Flexibel & kollaborativ     | Angepasst & abgestimmt\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDER ROTE FADEN VON KAPITEL 2:\nVorgehensmodell wählen = 4 Kriterien prüfen (Art, Komplexität, Anforderungsstabilität, Team)\n+ Stacey-Matrix anwenden (wo liegt das Projekt?)\n+ 4 Perspektiven einnehmen (visionär, faktisch, analytisch, beziehungsorientiert)\n→ DANN erst entscheiden: klassisch / agil / hybrid",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2015,
+        name: "Übung Stacey-Analyse: Ein Haustier anschaffen",
+        done: false,
+        date: "31.03.2026",
+        note: "AUFGABE (aus dem Kurs):\nAnhand der Stacey-Analyse einen eigenen Plan für eine besondere Anschaffung erstellen.\n\nMEIN BEISPIEL: Ein Haustier anschaffen\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1 | VISIONÄRE PERSPEKTIVE\nFrage: Warum will ich ein Haustier? Was soll es langfristig bedeuten?\n\n• Gesellschaft & weniger Alleinsein\n• Mehr Struktur im Alltag (feste Zeiten für Fütterung, Bewegung)\n• Verantwortung übernehmen und etwas pflegen\n• Vielleicht: Kind oder WG-Mitbewohner haben sich ein Tier gewünscht\n\nLangfristiger Nutzen: Emotionale Bindung, Alltagsstruktur, mehr Bewegung (bei Hund)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n2 | FAKTENPERSPEKTIVE\nFrage: Was sind die objektiven Rahmenbedingungen?\n\n• Wohnsituation: Haus mit Garten, Wohnung mit/ohne Balkon, Größe?\n• Vermieter: Haustiere erlaubt? Welche?\n• Budget: Anschaffungskosten + laufende Kosten (Futter, Tierarzt, Versicherung)\n  Beispiel Hund: 500–2.000 € Anschaffung + ca. 150–300 €/Monat laufend\n• Zeit: Wie viel Zeit ist täglich für das Tier realistisch?\n  Hund: mind. 2–3h täglich · Katze: weniger · Fisch: minimal\n• Allergien im Haushalt?\n• Urlaubs-/Reiseplanung: Wer kümmert sich dann?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3 | BEZIEHUNGSORIENTIERTE PERSPEKTIVE\nFrage: Wer ist beteiligt? Wessen Bedürfnisse müssen berücksichtigt werden?\n\n• Mitbewohner / Partner / Kinder: Wollen alle ein Tier? Welches?\n• Nachbarn: Könnten sie durch Lärm (Hund bellt) betroffen sein?\n• Freunde/Familie: Wer übernimmt das Tier im Urlaub?\n• Das Tier selbst: Welche sozialen Bedürfnisse hat es?\n  Hund: Rudeltier, braucht viel Aufmerksamkeit\n  Katze: unabhängiger, aber auch sozial\n  Kaninchen: am besten zu zweit\n\n→ Ohne offene Kommunikation mit allen Beteiligten → Konflikte vorprogrammiert!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4 | ANALYTISCHE PERSPEKTIVE\nFrage: Welche Optionen gibt es? Wie priorisieren wir?\n\nKriterienliste erstellen:\n• Must-have: Vermieter erlaubt es, alle im Haushalt einverstanden, Budget realistisch\n• Nice-to-have: Rasse, Farbe, Alter (Welpe vs. erwachsenes Tier)\n\nOptionen vergleichen:\nTier      | Kosten | Zeitaufwand | Platz | Allergie-Risiko\nHund      | hoch   | sehr hoch   | mittel| mittel\nKatze     | mittel | mittel      | gering| mittel\nKaninchen | gering | gering      | gering| gering\nFisch     | gering | sehr gering | gering| kein\nVogel     | gering | gering      | gering| gering\n\nPriorisierung: Was darf auf keinen Fall fehlen? Was ist verzichtbar?\n→ Fundierte Entscheidung die zu Lebenssituation und Bedürfnissen passt\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSTACEY-EINORDNUNG:\nAnforderungen: weitgehend klar (ich weiß was ich will)\nLösungsansatz: bekannt, aber individuell verschieden\n→ KOMPLIZIERT (nicht komplex) – es gibt gute Antworten, man muss sie nur durch Analyse finden\n→ Vorgehensmodell: klassisch mit Expertenrat (Tierarzt, Züchter, Tierheim)\n\nLERNEFFEKT:\nAuch private Entscheidungen lassen sich mit PM-Werkzeugen strukturieren –\nund werden dadurch besser, weil alle Perspektiven berücksichtigt werden.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2014,
+        name: "Die 4 Stacey-Perspektiven der Entscheidungsfindung",
+        done: false,
+        date: "31.03.2026",
+        note: "Bei der Stacey-Analyse werden 4 Perspektiven kombiniert, um zu einer fundierten Entscheidung zu kommen – welches Vorgehensmodell passt? Alle 4 fließen in die Entscheidungsfindung (Mitte des Modells) ein.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1 | VISIONÄRE PERSPEKTIVE\nFokus: Langfristige Ziele und strategische Ausrichtung\nFrage: Was soll das Projekt langfristig erreichen? Welchen übergeordneten Zweck hat es?\nKonzentriert sich auf: Zukunftsausrichtung und langfristigen Nutzen\n\nFahrrad-Beispiel: Warum will ich ein Fahrrad? Täglich zur Arbeit, gesünder leben, Umwelt schonen?\nPM-Beispiel Wissensdatenbank: Langfristiges Ziel = Wissenskultur im Unternehmen aufbauen, nicht nur ein Tool einführen.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n2 | FAKTENPERSPEKTIVE\nFokus: Objektive Fakten und Daten\nFrage: Was wissen wir konkret? Was sind die messbaren Rahmenbedingungen?\nBetrachtet: Anforderungen, Ressourcen, Budgets, Zeitpläne\n\nFahrrad-Beispiel: Budget 500 €, muss bis Montag da sein, Weg zur Arbeit 8 km.\nPM-Beispiel: Budget 80.000 €, 500 MA, Deadline Oktober, 3 mögliche Softwareanbieter.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3 | BEZIEHUNGSORIENTIERTE PERSPEKTIVE\nFokus: Zwischenmenschliche Beziehungen und Zusammenarbeit\nFrage: Wer ist beteiligt? Wie kommunizieren wir? Wie beeinflussen Beziehungen die Entscheidung?\n\nKursbeispiel Fahrradkauf:\nBudget reicht nicht für das Traumrad → Gespräch mit bester Freundin & Mitbewohnerin → gemeinsam wird die Idee entwickelt, das Fahrrad zusammen anzuschaffen.\nOhne gute Kommunikation und gegenseitiges Vertrauen → keine Einigung möglich.\n\nPM-Beispiel: Welche Stakeholder müssen eingebunden werden? Wie kommuniziert das Projektteam intern? Gibt es Konflikte zwischen IT und HR?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4 | ANALYTISCHE PERSPEKTIVE\nFokus: Untersuchung der vorhandenen Informationen und deren Bewertung\nFrage: Welche Optionen gibt es? Was sind die Kriterien? Wie priorisieren wir?\n\nKursbeispiel Fahrradkauf:\n• Verschiedene Fahrradtypen vergleichen (Mountainbike, Rennrad, Citybike)\n• Budget inkl. Zubehör, Wartung, Upgrades bedenken\n• Kriterienliste erstellen: Rahmengröße, Bremsen, Schaltung, Reifenqualität\n• Must-haves von Nice-to-haves trennen → priorisieren\n→ Ergebnis: fundierte Entscheidung die den eigenen Bedürfnissen entspricht\n\nPM-Beispiel: Nutzwertanalyse der 3 Softwareanbieter, Risikoabwägung, Kostenvergleich inkl. Lizenzkosten und Schulungsaufwand.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nZUSAMMENSPIEL DER 4 PERSPEKTIVEN:\nVisionär    → Wohin wollen wir?\nFakten      → Was haben wir?\nBeziehung   → Mit wem und wie?\nAnalytisch  → Was ist die beste Option?\n→ Alle 4 zusammen → ENTSCHEIDUNGSFINDUNG in der Mitte\n\nFÜR DIE PRAXIS:\nGute Projektleiterinnen wechseln bewusst zwischen diesen 4 Brillen –\nwer nur analytisch denkt, vergisst die Menschen.\nWer nur visionär denkt, verliert den Boden unter den Füßen.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2013,
+        name: "Die 4 Stacey-Projektarten: einfach, kompliziert, komplex, chaotisch",
+        done: false,
+        date: "31.03.2026",
+        note: "Die Stacey-Analyse unterscheidet 4 Projektarten – je nachdem wo ein Projekt auf der Matrix liegt (Anforderungsklarheit × Lösungsklarheit):\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1 | EINFACH\nAnforderungen: klar & eindeutig\nLösungsansatz: klar, bekannt, bewährt\nUmgebung: vorhersehbar\n→ Vorgehensmodell: TRADITIONELL / Wasserfall\n\nMerkmale:\n• Best Practices existieren und funktionieren zuverlässig\n• Kaum Überraschungen\n• Wenig Koordinationsaufwand nötig\n\nFallbeispiel:\nEinrichten eines neuen Druckers im Büro.\nAnforderung klar (drucken), Lösung bekannt (Treiber installieren, anschließen).\n→ Checkliste abarbeiten, fertig.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n2 | KOMPLIZIERT\nAnforderungen: weitgehend klar\nLösungsansatz: nicht sofort offensichtlich, aber durch Expertise lösbar\nUmgebung: vorhersehbar, aber Fachwissen nötig\n→ Vorgehensmodell: TRADITIONELL mit Experteneinbindung\n\nMerkmale:\n• Es gibt eine richtige Lösung – man muss sie nur finden\n• Expertenwissen entscheidend\n• Analyse und Planung vor Umsetzung wichtig\n\nFallbeispiel:\nBau einer neuen Brücke.\nZiel klar (Fluss überqueren), aber Statik, Materialwahl und Genehmigungen erfordern Experten.\n→ Klassisches PM mit Ingenieuren und detailliertem Plan.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n3 | KOMPLEX\nAnforderungen: unklar oder veränderlich\nLösungsansatz: unklar, neu, unerprobt\nUmgebung: unvorhersehbar, viele Interdependenzen\n→ Vorgehensmodell: AGIL / HYBRID\n\nMerkmale:\n• Keine eindeutige richtige Lösung vorab\n• Viele gegenseitige Abhängigkeiten (Interdependenzen)\n• Lernen durch Ausprobieren – Prototypen, Iterationen\n• Erfordert selbstorganisiertes, erfahrenes Team\n\nFallbeispiel:\nEntwicklung einer neuen mobilen App in einem sich schnell ändernden Markt.\nNutzeranforderungen ändern sich laufend, Technologien entwickeln sich weiter.\n→ Scrum: in Sprints entwickeln, nach jedem Sprint Feedback einholen & anpassen.\n\nBeispiel Wissensdatenbank:\nKomplex, weil: Nutzerverhalten unbekannt, Software noch nicht ausgewählt, Akzeptanz unsicher\n→ Hybrid war richtig: klassischer Rahmen + agile Pilotphase\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n4 | CHAOTISCH\nAnforderungen: völlig unklar\nLösungsansatz: völlig unbekannt\nUmgebung: extrem unvorhersehbar, Krise\n→ Vorgehensmodell: SOFORTMASSNAHMEN, dann stabilisieren\n\nMerkmale:\n• Keine Zeit für Planung – sofortiges Handeln nötig\n• Ziel: Chaos in Komplexität umwandeln\n• Erst stabilisieren, dann analysieren\n• Führung muss schnell und autoritativ entscheiden\n\nFallbeispiel:\nEin Unternehmensserver fällt mitten im Geschäftsbetrieb aus.\nKeine Zeit für Meetings – IT handelt sofort, stellt Notbetrieb her,\ndann erst: Ursachenanalyse und langfristige Lösung.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nÜBERSICHT AUF EINEN BLICK:\nEinfach     → Checkliste abarbeiten     → Wasserfall\nKompliziert → Experten einbinden        → klassisch + Analyse\nKomplex     → iterativ ausprobieren     → agil / hybrid\nChaotisch   → sofort handeln            → Krisenmanagement\n\nDIE RICHTUNG AUF DER MATRIX:\nEinfach → kompliziert → komplex → chaotisch\n  traditionell ←──────────────────→ agil",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2012,
+        name: "Auswahl Vorgehensmodelle & Stacey-Analyse",
+        done: false,
+        date: "31.03.2026",
+        note: "WORAN WÄHLT MAN EIN VORGEHENSMODELL AUS?\n3 Hauptkriterien + 1 Zusatzfaktor:\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n01 | ART DES PROJEKTS\nUm welche Art von Projekt handelt es sich?\n→ Softwareentwicklung, Bauprojekt, Marketingprojekt?\nJede Art hat eigene Anforderungen und Herausforderungen.\n\n⚠️ WARNUNG (aus dem Kurs):\n'Art des Projekts' bezieht sich auf die KLASSIFIZIERUNG basierend auf Merkmalen wie Komplexität, Anforderungsstabilität und Art der Aufgabe –\nNICHT auf die Branche, in der das Projekt angewendet wird!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n02 | KOMPLEXITÄT DES PROJEKTS\nKomplexität = Vielfalt der Entscheidungen und Interdependenzen + Informationen + Unsicherheiten + Projektumfeld\n\nDEFINITION INTERDEPENDENZ:\nGegenseitige Abhängigkeit und das Wechselspiel zwischen verschiedenen Elementen oder Faktoren.\n\nEinfaches Projekt: klare Anforderungen, bekanntes Vorgehen\nKomplexes Projekt: viele unbekannte Faktoren, Unsicherheiten, mögliche Lösungswege\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n03 | ANFORDERUNGSSTABILITÄT\nBeschreibt, ob die gewünschten Ergebnisse oder Funktionalitäten über einen längeren Zeitraum konstant bleiben oder sich häufig ändern.\n\nStabile Anforderungen → detaillierter Plan möglich → klassisches Modell\nInstabile Anforderungen → Flexibilität erforderlich → adaptives/agiles Modell\n   z.B. Lean Startup oder Design Thinking\n\nBeispiel instabile Anforderungen:\nEntwicklung einer neuen mobilen App – Nutzeranforderungen und Marktbedingungen ändern sich ständig → Team muss flexibel sein und sich kontinuierlich anpassen.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nZUSATZFAKTOR | TEAMZUSAMMENSETZUNG\nUmfasst individuelle Fähigkeiten, Erfahrungen und Rollen der Teammitglieder.\n\nErfahrenes, selbstorganisiertes Team\n→ agile Vorgehensmodelle geeignet\n→ kann eigenständig entscheiden und Verantwortung übernehmen\n\nWeniger erfahrenes oder hierarchisches Team\n→ klassische Vorgehensmodelle angemessener\n→ braucht klare Anweisungen, festgelegte Phasen, klare Führung\n\nBeispiel: Erfahrene Softwareentwickler, Scrum-vertraut → agil ideal.\nWenig erfahrene Mitarbeiter, hierarchisch gewohnt → Wasserfall gibt Struktur.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDIE STACEY-MATRIX:\nZwei Achsen:\nY-Achse: ANFORDERUNGEN (klar/eindeutig → unklar/mehrdeutig)\nX-Achse: LÖSUNGSANSATZ (klar/bekannt/bewährt → unklar/neu/unerprobt)\n\nDie Diagonale zeigt den Weg:\nEinfach → kompliziert → komplex → chaotisch\n   ↓                                    ↓\nTRADITIONELL                          AGIL\n\nLESEANLEITUNG:\nUnten links  (Anforderungen klar + Lösung bekannt)    → TRADITIONELL / Wasserfall\nOben rechts  (Anforderungen unklar + Lösung unbekannt) → AGIL / Scrum, Kanban\nMitte        (gemischt)                                → HYBRID\n\nBEISPIEL WISSENSDATENBANK:\nAnforderungen: weitgehend klar (500 MA, Kundenkontakt) → eher unten\nLösungsansatz: Software noch nicht ausgewählt → eher rechts\n→ Mitte der Matrix → HYBRID war die richtige Wahl ✓",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2011,
+        name: "Übung Hybrides PM: Planung eines Kindergeburtstages",
+        done: false,
+        date: "31.03.2026",
+        note: "AUFGABE (aus dem Kurs):\nErstelle ein eigenes Beispiel für hybrides Projektmanagement – alltäglich oder unternehmerisch.\n\nMEIN BEISPIEL: Kindergeburtstag für 15 Kinder\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nKLASSISCHER RAHMEN (Entscheidungsebene):\n\nProjektauftrag:\n• 15 Kinder, Budget 300 €, Termin 15. Mai\n\nMeilensteine:\n• MS1: Location gebucht (1. April)\n• MS2: Einladungen verschickt (15. April)\n• MS3: Catering bestellt (1. Mai)\n• MS4: Geburtstag durchgeführt & abgeschlossen (15. Mai)\n\nRessourcenplan:\n• 150 € Essen & Trinken\n• 80 € Deko\n• 70 € Aktivitäten (Clown, Spiele)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nAGILE UMSETZUNG (operatives Arbeiten):\n\nSprint 1 (Woche 1): Thema & Location\n→ Themenvorschläge mit Kind besprechen → Feedback → Entscheidung\n→ Location buchen oder Indoor-Option sichern\n\nSprint 2 (Woche 2): Einladungen & Gästeliste\n→ Einladungen gestalten → verschicken → Rückmeldungen sammeln\n→ Allergenliste & Unverträglichkeiten abfragen (→ direkt ins Risikoregister)\n\nSprint 3 (Woche 3-4): Programm & Catering\n→ Programm planen → ein Spiel ausprobieren → bei Kind testen\n→ Catering anhand Allergenliste anpassen\n\nDaily Check: täglicher kurzer Überblick – was ist erledigt, was klemmt?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nRISIKOREGISTER (mein Zusatz – praxisrelevant!):\n\nRisiko                        | W'keit | Auswirkung | Gegenmaßnahme\nClown fällt kurzfristig aus   | mittel | hoch       | Spielepaket als Backup vorbereiten\nLebensmittelunverträglichkeit | hoch   | sehr hoch  | Allergenliste bei Einladung abfragen, Alternativen einplanen\nRegen / Schlechtwetter        | mittel | mittel     | Indoor-Option reservieren\nKind wird krank               | niedrig| sehr hoch  | Ausweichtermin im Kalender blockieren\nZu viele/wenige Zusagen       | mittel | niedrig    | Puffer bei Catering & Goodie-Bags einplanen\nStreit unter Kindern          | mittel | mittel     | Erwachsene als Moderatoren einplanen\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDAS HYBRID-PRINZIP SICHTBAR:\nBudget & Termin    = klassisch fest (nicht verhandelbar)\nProgramm & Deko    = agil anpassbar (nach Feedback des Kindes)\nRisiken            = klassisch dokumentiert (Risikoregister)\nUmsetzung          = agil in Sprints (flexibel auf Rückmeldungen)\n\nLERNEFFEKT:\nEin Kindergeburtstag ist kein 'echtes' Projekt im PM-Sinne –\naber er erfüllt überraschend viele der 7 Projektbedingungen:\n✓ Definiertes Ziel  ✓ Zeitlich begrenzt  ✓ Ressourcenbegrenzt\n✓ Neu & einmalig    ✓ Komplex (Risiken!)  ✓ Temporäre Strukturen\n→ Fehlt nur: projektspezifische Organisationsform – daher kein formales Projekt.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2010,
+        name: "Hybrides Projektmanagement",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION (aus dem Kurs):\nImmer öfter gibt es Projekte, bei denen weder das klassische noch das agile Vorgehen alleine ausreicht. Aus diesem Grund wird vermehrt auf hybrides Projektmanagement gesetzt, das die besten Eigenschaften beider Ansätze vereint und deren Schwächen bestmöglich minimiert.\n\nDAS KERNPRINZIP:\n• Operatives Arbeiten → nach AGILEN Prinzipien\n• Entscheidungsebene → nach KLASSISCHEM Projektmanagement\n\nWARUM HYBRID?\nAgiles PM + klassisches PM ergänzen sich:\n• Agilität bringt: Flexibilität, Anpassungsfähigkeit, schnelle Ergebnisse\n• Klassisch bringt: Struktur, klare Entscheidungsprozesse, Planungssicherheit\n→ Ergebnis: gesteigerter Projekterfolg und bessere Erfüllung der Projektziele\n\nTYPISCHE AUFTEILUNG IN DER PRAXIS:\nProjektinitiierung  → klassisch (Projektauftrag, Budget, Meilensteine)\nProjektplanung      → klassisch (PSP, Ressourcenplan, Risikoregister)\nProjektdurchführung → agil (Sprints, Daily Scrums, iterative Lieferung)\nProjektabschluss    → klassisch (Abschlussbericht, Lessons Learned, Ressourcenrückführung)\n\nBEISPIEL WISSENSDATENBANK:\nKlassisch: Projektauftrag mit 80.000 € Budget und Deadline Oktober genehmigt\nAgil: Pilotphase in 2-Wochen-Sprints → Feedback → UX angepasst → nächster Sprint\nKlassisch: Abschlussbericht, Übergabe an IT-Betrieb, Ressourcenrückführung\n→ Das war von Anfang an ein hybrides Projekt!\n\nVERGLEICH ALLER 3 ANSÄTZE:\nKlassisch: Was? Wann? Wie? → alles vorab definiert\nAgil:      Ziel klar, Weg offen → iterativ entdecken\nHybrid:    Rahmen klassisch, Umsetzung agil → das Beste aus beiden Welten\n\nFÜR DIE PRAXIS:\nHybrid ist heute die häufigste Form in größeren Unternehmen –\nweil echte Projekte selten zu 100% planbar ODER zu 100% offen sind.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2009,
+        name: "Agil vs. Adaptiv – Unterschied & Beispiele",
+        done: false,
+        date: "31.03.2026",
+        note: "AUS DEM KURS:\nSowohl Scrum als auch Kanban sind adaptive Vorgehensmodelle, die zur agilen Methodik zählen und sich durch ihre Flexibilität und Anpassungsfähigkeit auszeichnen.\n\nWICHTIGE KLARSTELLUNG:\nNicht alle agilen Methoden sind automatisch adaptiv.\nEs gibt auch andere Vorgehensmodelle, die als adaptiv bezeichnet werden können, jedoch nicht unbedingt agil sind.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDER KERNUNTERSCHIED:\n\nAGIL = eine spezifische Philosophie & Prinzipien im PM\n• Basiert auf dem Agilen Manifest (2001)\n• Konkrete Werte: Individuen > Prozesse, funktionierende Software > Dokumentation, Zusammenarbeit > Verträge, Reagieren auf Veränderung > Plan folgen\n• Hat spezifische Frameworks: Scrum, Kanban, SAFe, XP\n• Immer auch adaptiv – aber umgekehrt gilt das NICHT\n\nADAPTIV = übergeordneter Begriff für Anpassungsfähigkeit\n• Beschreibt die FÄHIGKEIT, sich an Veränderungen anzupassen\n• Keine eigene Philosophie oder Wertesystem\n• Kann auch in klassischen oder hybriden Projekten vorkommen\n• Kein Synonym für agil – sondern eine Eigenschaft\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMERKFORMEL:\nAgil ⊂ Adaptiv  (Agil ist IMMER adaptiv)\nAdaptiv ⊄ Agil  (Adaptiv ist NICHT immer agil)\n\nWie ein Quadrat (agil) immer ein Rechteck (adaptiv) ist –\naber ein Rechteck nicht immer ein Quadrat.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nBEISPIELE:\n\nAGIL (Philosophie + Framework):\n→ Ein Software-Team arbeitet in 2-Wochen-Sprints mit Scrum.\n   Nach jedem Sprint entscheidet der Product Owner neu, was als nächstes gebaut wird.\n   Das Team folgt den Werten des Agilen Manifests.\n   → AGIL (und damit auch adaptiv)\n\nADAPTIV aber NICHT agil:\n→ Ein klassisches Bauprojekt mit Wasserfall-Planung.\n   Nach einem Erdbeben müssen Pläne kurzfristig angepasst werden.\n   Das Projektteam reagiert flexibel auf die neue Situation.\n   → ADAPTIV (Anpassungsfähigkeit) – aber NICHT agil (kein agiles Framework, keine agile Philosophie)\n\n→ Ein Eventmanagement-Team plant eine Messe klassisch vor.\n   Kurzfristig fällt ein Aussteller aus → Programm wird umstrukturiert.\n   → ADAPTIV – aber kein Scrum, kein Kanban, kein agiles Manifest\n\nADAPTIV UND AGIL:\n→ Kanban-Board im IT-Support: neue Tickets kommen täglich rein,\n   Prioritäten werden laufend angepasst, WIP-Limit wird eingehalten.\n   → Beides: agile Methode (Kanban) + adaptives Vorgehen\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nFÜR DIE PRÜFUNG:\nFrage: 'Ist das Spiralmodell agil?'\nAntwort: NEIN – es ist adaptiv (iterativ, Risikozyklen), aber folgt nicht dem Agilen Manifest und ist kein agiles Framework.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2008,
+        name: "Kanban – Prinzipien & Abgrenzung zu Scrum",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION:\nDas Hauptziel von Kanban besteht darin, den Arbeitsprozess so transparent und effizient wie möglich zu gestalten und zu optimieren, um eine höhere Effizienz und bessere Ergebnisse zu erzielen.\n\nKanban ist eine Arbeitsmethode, die auf 3 wichtigen Prinzipien basiert:\n\n01 | VISUALISIERUNG\nAlle Aufgaben und Arbeitsschritte werden sichtbar gemacht – durch eine Tafel oder ein digitales Board. Jede Aufgabe wird als Karte oder Post-it dargestellt und den entsprechenden Teams oder Abteilungen zugeordnet. Dadurch kann jeder sehen, was erledigt wurde und was noch zu tun ist.\n→ Typische Spalten: To Do | In Progress | Done\n\n02 | BEGRENZUNG (WIP-Limit)\nDie Menge an Arbeit, die gleichzeitig bearbeitet werden kann, wird begrenzt (WIP = Work in Progress). Jedes Team nimmt nur eine bestimmte Anzahl von Aufgaben an, um Überlastung zu vermeiden → das Team arbeitet effektiv und wird nicht von zu vielen Aufgaben überfordert.\n\n03 | KONTINUIERLICHE VERBESSERUNG\nKanban ermutigt dazu, den Arbeitsprozess ständig zu überprüfen und zu verbessern. Engpässe oder Probleme werden identifiziert und Lösungen gefunden, um den Arbeitsfluss zu optimieren.\n\nGESAMTFAZIT (aus dem Kurs):\nKanban ermöglicht eine bessere Übersicht über die Arbeit, verhindert Überlastung und fördert kontinuierliche Verbesserungen. Es ist eine einfache und flexible Methode, die in vielen Bereichen eingesetzt werden kann.\n\nKANBAN vs. SCRUM – KERNUNTERSCHIEDE:\n                  KANBAN              SCRUM\nZeitrahmen:       kein fester Sprint   feste Sprints (1-4 Wo.)\nRollen:           keine vorgeschrieben  PO, SM, Entwicklungsteam\nÄnderungen:       jederzeit möglich    erst im nächsten Sprint\nFokus:            Arbeitsfluss          Lieferergebnis pro Sprint\nPlanung:          kontinuierlich        Sprint Planning\n\nWANN KANBAN, WANN SCRUM?\nKanban: Support-Teams, laufende Prozesse, Operations, IT-Betrieb\nScrum:  Produktentwicklung, klare Ziele pro Sprint, neue Features\n\nBEISPIEL WISSENSDATENBANK:\nNach dem Projektabschluss → IT-Betrieb pflegt die Datenbank mit Kanban:\nTo Do: neue Artikel erstellen | In Progress: Artikel in Review | Done: veröffentlicht",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2007,
+        name: "Scrum – Framework, Rollen & Ablauf",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION (aus dem Kurs):\nScrum ist ein Projektmanagement-Framework, das für seine einfache und schlanke Arbeitsweise bekannt ist. Es basiert auf der Idee, dass Projekte in kleinen, abgeschlossenen Abschnitten bearbeitet werden, die als Sprints bezeichnet werden. Jeder Sprint konzentriert sich darauf, eine bestimmte Menge Arbeit zu erledigen und eine neue Version des Produkts zu liefern.\n\nDAS BESONDERE AN SCRUM:\nRegelmäßige Feedbackschleifen. Nach jedem Sprint wird das Produkt bewertet und das Feedback der Kunden und Stakeholder fließt in die weitere Entwicklung ein → ständige Verbesserung und Anpassung.\n\nDIE 3 HAUPTROLLEN:\n\n1. PRODUCT OWNER (PO)\n   → Versteht die Anforderungen des Kunden\n   → Bringt sie in die Produktentwicklung ein\n   → Pflegt und priorisiert das Product Backlog\n\n2. SCRUM MASTER (SM)\n   → Sorgt für einen reibungslosen Ablauf des Prozesses\n   → Unterstützt das Team bei der Einhaltung der Scrum-Prinzipien\n   → Kein klassischer Projektmanager – eher Coach & Moderator\n   → Servant Leadership: dient dem Team, gibt keine Anweisungen\n\n3. ENTWICKLUNGSTEAM\n   → Arbeitet gemeinsam an der Umsetzung der Anforderungen\n   → Liefert kontinuierlich Ergebnisse\n   → Selbstorganisiert – keine traditionelle Projektmanager-Rolle im Team\n\nKEIN TRADITIONELLER PROJEKTMANAGER:\nIn Scrum gibt es keine klassische Projektmanager-Rolle. Die Verantwortung ist auf die 3 Rollen verteilt.\n\nDER SCRUM-ABLAUF (aus der Grafik):\nProduct Backlog\n    ↓ (Sprint Planning)\nSprint Backlog\n    ↓ (Team Sprint – iterativer Zyklus)\nProduct Increment\n    ↑ (Daily Scrum Meeting alle 24h – Synchronisation im Team)\n\nDIE 5 SCRUM-ARTEFAKTE & EVENTS:\nArtefakte:  Product Backlog · Sprint Backlog · Product Increment\nEvents:     Sprint Planning · Daily Scrum · Sprint Review · Sprint Retrospective\n\nVERBINDUNG ZU KAPITEL 2:\nScrum ist die bekannteste Ausprägung des AGILEN Vorgehensmodells.\nWo Wasserfall linear ist, arbeitet Scrum in Schleifen (Sprints).\nWo V-Modell auf Dokumentation setzt, setzt Scrum auf Kommunikation.",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2006,
+        name: "Agiles Projektmanagement – Definition, Vor- & Nachteile",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION AGILITÄT (aus dem Kurs):\nAgilität ist ein Begriff, der im Projektmanagement verwendet wird, um eine flexible und anpassungsfähige Herangehensweise an Projekte zu beschreiben. Es geht darum, sich auf Veränderungen einzustellen und schnell auf neue Anforderungen zu reagieren.\nAgilität bedeutet: Teams arbeiten in kurzen Schritten, holen regelmäßig Feedback ein und verbessern sich kontinuierlich.\n\nKERNPRINZIPIEN:\n• Fokus auf KOLLABORATION – das Team arbeitet eng zusammen und kommuniziert regelmäßig\n• Fokus auf KUNDENORIENTIERUNG – Anforderungen werden kontinuierlich überprüft und angepassst\n• Anstatt das gesamte Projekt vorauszuplanen: schrittweises Vorgehen mit regelmäßigen Zwischenergebnissen\n• Hohe Flexibilität bei sich ändernden Anforderungen\n\nVORTEILE:\n✓ Leicht verständlich und einführbar\n✓ Hohe Transparenz und kurze Kommunikationswege\n✓ Schrittweises Vorgehen und regelmäßige Zwischenergebnisse\n✓ Kein Bedarf für einen Gesamtüberblick des Projekts vor Projektstart\n✓ Vereinfachte Projektplanung\n✓ Schnelle und flexible Umsetzung von Anpassungen\n\nNACHTEILE:\n✗ Hoher Kommunikations- und Abstimmungsaufwand zwischen allen Projektbeteiligten\n✗ Hohe Anforderungen und Eigenverantwortung der einzelnen Teammitglieder\n✗ Keine klare Ressourcenplanung bis zum Projektende aufgrund des schrittweisen Vorgehens und der unvorhersehbaren Projektentwicklung\n\nKLASSISCH vs. AGIL – KERNUNTERSCHIED:\nKlassisch: Alles wird vorab geplant → dann umgesetzt\nAgil: Grob planen → umsetzen → Feedback → anpassen → wiederholen\n\nBEISPIEL WISSENSDATENBANK:\nKlassisch geplant (Wasserfall): Alle Anforderungen vorab definiert → Risiko: Nutzer wollen am Ende etwas anderes\nAgil umgesetzt: Nach Pilotphase mit Team 1 → Feedback eingeholt → UX angepasst → dann Rollout\n→ In der Praxis war das Wissensdatenbank-Projekt hybrid: klassische Planung + agile Steuerungsphase",
+        open: true,
+        generated: false
+      },
+      {
+        id: 2005,
+        name: "Das Spiralmodell",
+        done: false,
+        date: "31.03.2026",
+        note: "DEFINITION:\nDas Spiralmodell ist ein iteratives Vorgehensmodell, das Projektarbeit in sich wiederholenden Zyklen (Spiralen) organisiert. Jeder Zyklus durchläuft dieselben 4 Quadranten – aber mit wachsendem Detailgrad.\n\nDIE 4 QUADRANTEN (pro Zyklus):\n1. ZIELE ERMITTELN\n   Planung der Anforderungen, Entwicklungsplan\n2. RISIKO ANALYSIEREN\n   Risikoanalyse, Prototyp erstellen und bewerten\n3. ENTWICKELN UND TESTEN\n   Softwaredesign, Codierung, Integration, Tests, Auslieferung\n4. NÄCHSTEN ZYKLUS PLANEN\n   Integration und Testplanung, Validierung und Verifizierung\n\nDAS PRINZIP:\n• Jeder Zyklus = eine Spirale nach außen (wachsende Komplexität)\n• Risikomanagement steht im Mittelpunkt – in JEDEM Zyklus\n• Am Anfang: grober Prototyp → am Ende: betriebsfähiges System\n• Geeignet für große, komplexe und risikoreiche Projekte\n\nVORTEILE:\n• Risiken werden früh und regelmäßig bewertet\n• Flexibler als Wasserfall und V-Modell\n• Frühzeitige Prototypen geben Orientierung\n• Änderungen können zwischen Zyklen eingebaut werden\n\nNACHTEILE:\n• Komplex in der Steuerung\n• Aufwändig und teuer\n• Erfordert erfahrene Projektleitung\n\nTYPISCHE EINSATZBEREICHE:\nGroße Software-Entwicklungsprojekte, Rüstung, Forschungsprojekte.\n\nVERGLEICH DER 4 KLASSISCHEN MODELLE:\nPhasenmodell  → Oberbegriff, sequenziell\nWasserfallm.  → Linear, streng sequenziell, stabile Anforderungen\nV-Modell      → Wasserfall + Testphasen, hohe Qualitätssicherung\nSpiralmodell  → Iterativ, Risikofokus, große komplexe Projekte",
+        open: true,
+        generated: false
+      },
+    ]
+  },
+  {
+    id: "k3",
+    num: 3,
+    title: "Die Rollen des Projektes und des Projektmanagers",
+    subtitle: "Projektleiter · Stakeholder · Team",
+    open: false,
+    entries: []
+  },
+  {
+    id: "k4",
+    num: 4,
+    title: "Übersicht über die Projektmanagementphasen",
+    subtitle: "Initiierung → Planung → Durchführung → Überwachung → Abschluss",
+    open: false,
+    entries: []
+  },
+  {
+    id: "k5",
+    num: 5,
+    title: "Multiprojektmanagement und Projektmanagementbüros",
+    subtitle: "PMO · Portfolio · Programm",
+    open: false,
+    entries: []
+  }
+];
+
+var kEntryCounter = 1000;
+
+function kTd() {
+  var d = new Date();
+  return d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+}
+
+function toggleKapitel(kid) {
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (k) { k.open = !k.open; renderKapitel(); }
+}
+
+function addKEntry(kid) {
+  var inp = document.getElementById('kinp-' + kid);
+  if (!inp || !inp.value.trim()) return;
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (!k) return;
+  k.entries.push({
+    id: ++kEntryCounter,
+    name: inp.value.trim(),
+    done: false,
+    date: kTd(),
+    note: '',
+    open: false,
+    generated: false
+  });
+  inp.value = '';
+  renderKapitel();
+}
+
+function togKEntry(kid, eid) {
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (!k) return;
+  k.entries = k.entries.map(function(e){ return e.id===eid ? Object.assign({},e,{done:!e.done}) : e; });
+  renderKapitel();
+}
+
+function togKNote(kid, eid) {
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (!k) return;
+  k.entries = k.entries.map(function(e){ return e.id===eid ? Object.assign({},e,{open:!e.open}) : e; });
+  renderKapitel();
+}
+
+function saveKNote(kid, eid, val) {
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (!k) return;
+  k.entries = k.entries.map(function(e){ return e.id===eid ? Object.assign({},e,{note:val, generated:false}) : e; });
+}
+
+function remKEntry(kid, eid) {
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (!k) return;
+  k.entries = k.entries.filter(function(e){ return e.id !== eid; });
+  renderKapitel();
+}
+
+function genKEx(kid, eid) {
+  var k = KAPITEL.find(function(x){ return x.id === kid; });
+  if (!k) return;
+  var e = k.entries.find(function(x){ return x.id === eid; });
+  if (!e) return;
+
+  var gbtn = document.getElementById('kgbtn-'+eid);
+  var lo   = document.getElementById('klo-'+eid);
+  var sub  = document.getElementById('ksub-'+eid);
+
+  if (gbtn) { gbtn.disabled=true; gbtn.textContent='Lädt...'; }
+  if (sub)  { sub.classList.add('open'); k.entries = k.entries.map(function(x){ return x.id===eid ? Object.assign({},x,{open:true}) : x; }); }
+  if (lo)   lo.classList.add('show');
+
+  var prompt = 'Erstelle bitte Übungen zum Thema "'+e.name+'" aus dem Kapitel "'+k.title+'" (Modul 1: Einführung in das klassische Projektmanagement, Weiterbildung Office Manager / Projektmanagement / Scrum Master bei ChapterNext, 2026).'
+    +' Liefere gemischten Schwierigkeitsgrad mit genau diesen 4 Teilen:\n'
+    +'1. Multiple-Choice-Frage (4 Antwortoptionen A–D, eine richtig, Lösung ganz am Ende)\n'
+    +'2. Praxisaufgabe / Szenario (kurzer realistischer Fall aus dem Berufsalltag)\n'
+    +'3. Erklärung + Beispiel (max. 3 Sätze + 1 Praxisbeispiel)\n'
+    +'4. Reflexionsfrage (bezieht sich auf eigene Erfahrungen)\n'
+    +(e.note && !e.generated ? 'Zusatzkontext: '+e.note+'\n' : '')
+    +'Antworte auf Deutsch, klar gegliedert mit nummerierten Überschriften. Hebe PM-Fachbegriffe mit ** fett ** hervor.';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1200,
+      messages: [{ role:'user', content: prompt }]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if (lo) lo.classList.remove('show');
+    if (gbtn) { gbtn.disabled=false; gbtn.textContent='Neu generieren'; }
+    var text = (data.content && data.content[0] && data.content[0].text) || 'Keine Antwort erhalten.';
+    k.entries = k.entries.map(function(x){ return x.id===eid ? Object.assign({},x,{note:text, open:true, generated:true}) : x; });
+    renderKapitel();
+  })
+  .catch(function(err){
+    if (lo) lo.classList.remove('show');
+    if (gbtn) { gbtn.disabled=false; gbtn.textContent='Übungen generieren'; }
+    k.entries = k.entries.map(function(x){
+      return x.id===eid ? Object.assign({},x,{note:'Fehler. Bitte erneut versuchen.\n\n'+err, open:true, generated:false}) : x;
+    });
+    renderKapitel();
+  });
+}
+
+function toggleAllKapitel() {
+  var anyOpen = KAPITEL.some(function(k){ return k.open; });
+  KAPITEL.forEach(function(k){ k.open = !anyOpen; });
+  renderKapitel();
+}
+
+function renderKapitel() {
+  var container = document.getElementById('kapitel-list');
+  if (!container) return;
+
+  container.innerHTML = KAPITEL.map(function(k) {
+    var done = k.entries.filter(function(e){ return e.done; }).length;
+    var total = k.entries.length;
+    var statsStr = total > 0 ? (done + '/' + total + ' ✓') : 'leer';
+
+    var entriesHtml = '';
+    if (k.entries.length === 0) {
+      entriesHtml = '<div class="kapitel-empty">Noch keine Einträge – füge deine erste Erkenntnis hinzu ↓</div>';
+    } else {
+      entriesHtml = '<div class="kapitel-entries">' + k.entries.map(function(e) {
+        var noteContent = e.generated && e.note
+          ? '<div class="result-text">'+escHtml(e.note)+'</div>'
+          : '<textarea placeholder="Notiz / Erkenntnis..." onchange="saveKNote(\''+k.id+'\','+e.id+',this.value)" onkeyup="saveKNote(\''+k.id+'\','+e.id+',this.value)">'+escHtml(e.note)+'</textarea>';
+
+        return '<div class="kcard'+(e.done?' done':'')+'" id="kec-'+e.id+'">'
+          +'<div class="kcard-main">'
+            +'<div class="chk'+(e.done?' on':'')+'" onclick="togKEntry(\''+k.id+'\','+e.id+')" title="Abhaken"></div>'
+            +'<span class="ename">'+escHtml(e.name)+'</span>'
+            +'<span class="edate">'+e.date+'</span>'
+            +'<button class="icon-btn ai" onclick="genKEx(\''+k.id+'\','+e.id+')" id="kgbtn-'+e.id+'">'+(e.generated?'Neu generieren':'Übungen generieren')+'</button>'
+            +'<button class="icon-btn" onclick="togKNote(\''+k.id+'\','+e.id+')" title="Notiz">'+(e.open?'▲':(e.note?'★':'☆'))+'</button>'
+            +'<button class="icon-btn del" onclick="remKEntry(\''+k.id+'\','+e.id+')" title="Löschen">×</button>'
+          +'</div>'
+          +'<div class="kcard-sub'+(e.open?' open':'')+'" id="ksub-'+e.id+'">'
+            +'<div class="loading-row" id="klo-'+e.id+'"><div class="spin"></div>Übungen werden generiert...</div>'
+            + noteContent
+          +'</div>'
+        +'</div>';
+      }).join('') + '</div>';
+    }
+
+    return '<div class="kapitel">'
+      +'<div class="kapitel-header" onclick="toggleKapitel(\''+k.id+'\''+')">'
+        +'<div class="kapitel-num">'+k.num+'</div>'
+        +'<div style="flex:1">'
+          +'<div class="kapitel-title">'+k.title+'</div>'
+          +'<div class="kapitel-subtitle">'+k.subtitle+'</div>'
+        +'</div>'
+        +'<span class="kapitel-stats">'+statsStr+'</span>'
+        +'<span class="kapitel-toggle'+(k.open?' open':'')+'">▼</span>'
+      +'</div>'
+      +'<div class="kapitel-body'+(k.open?' open':'')+'">'
+        + entriesHtml
+        +'<div class="kapitel-add">'
+          +'<input type="text" id="kinp-'+k.id+'" placeholder="Neue Erkenntnis / Notiz..." onkeydown="if(event.key===\'Enter\')addKEntry(\''+k.id+'\''+')" />'
+          +'<button onclick="addKEntry(\''+k.id+'\''+')">'+'+ Eintrag'+'</button>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+var CATS = [
+  { id:"chat",    l:"Chat",        bg:"#EAF2FC", tx:"#0C447C", dt:"#185FA5" },
+  { id:"algo",    l:"Algorithmus", bg:"#EBF5EE", tx:"#1C5C38", dt:"#2D7A4F" },
+  { id:"pm",      l:"Projektmgmt", bg:"#EEEDFE", tx:"#3C3489", dt:"#534AB7" },
+  { id:"agil",    l:"Agil/Scrum",  bg:"#FEF3E2", tx:"#633806", dt:"#854F0B" },
+  { id:"digital", l:"Digital",     bg:"#E3F5EE", tx:"#085041", dt:"#0F6E56" },
+  { id:"sonstig", l:"Sonstiges",   bg:"#F1F0EC", tx:"#444441", dt:"#888780" }
+];
+
+var entries = [
+  { id:1, name:"Analogien Algorithmus", cat:"algo", done:false, date:"30.03.2026", note:"", open:false, generated:false },
+  { id:2, name:"MYCIN – Algorithmus ja oder nein?", cat:"algo", done:false, date:"30.03.2026", note:"Antwort: Ja – MYCIN ist ein Algorithmus, genauer gesagt ein regelbasierter Entscheidungsalgorithmus.\n\nEin Algorithmus ist eine endliche, eindeutige Folge von Anweisungen, die ein Problem schrittweise löst. MYCIN folgt genau diesem Prinzip: Es wertet Symptome und Labordaten nach fest definierten Wenn-Dann-Regeln aus (z.B. \"Wenn Bakterientyp X vorliegt UND Merkmal Y zutrifft, dann empfehle Antibiotikum Z\"). Die Schritte sind deterministisch, wiederholbar und führen zu einem definierten Ergebnis. Das System terminiert nach der Auswertung aller relevanten Regeln mit einer konkreten Behandlungsempfehlung. Damit erfüllt MYCIN alle klassischen Kriterien eines Algorithmus – auch wenn er durch seine Komplexität eher als \"Expertensystem\" bezeichnet wird.", open:true, generated:false },
+  { id:3, name:"Bist wirklich Du das? – Gesichtserkennung & neuronale Netze", cat:"algo", done:false, date:"30.03.2026", note:"Perspektive eines neuronalen Netzes:\n\nWenn ich als neuronales Netz eine Person mit Sonnenbrille oder Maske erkenne, fehlen mir entscheidende Merkmalsbereiche, auf die ich trainiert wurde: Augenpartie, Nasenrücken, Mundform. Meine Neuronen haben gelernt, Gesichter als Gesamtmuster zu gewichten – fällt ein großer Teil davon weg, sinkt meine Konfidenz unter den Schwellenwert und ich verweigere den Zugang.\n\nWarum es trotzdem manchmal klappt: Das Netz erkennt andere stabile Muster – Gesichtskontur, Stirnform, Augenabstand (bei Sonnenbrille noch sichtbar), Hautton, Haaransatz oder die Art, wie jemand den Kopf hält. Wenn diese Restmuster stark genug mit dem gespeicherten Profil übereinstimmen, reicht die Gesamtwahrscheinlichkeit aus.\n\nFehlende Informationen bei Maske: Mund, Nase, Wangen, Kinnpartie – oft 40–60 % der trainierten Merkmale.\n\nTrotzdem erkannte Muster: Augenabstand, Stirn, Schläfenbereich, Ohrform, allgemeine Gesichtsgeometrie – reicht bei gut trainierten Netzen oft noch aus, besonders wenn Trainingsdaten auch maskierte Gesichter enthielten.", open:true, generated:false },
+  { id:4, name:"Halluzinationen bei LLMs", cat:"digital", done:false, date:"30.03.2026", note:"Definition: Eine Halluzination bei einem LLM bezeichnet eine Ausgabe, die faktisch falsch, erfunden oder nicht durch die Trainingsdaten belegbar ist – aber vom Modell mit hoher Überzeugung als korrekt präsentiert wird. Das Modell lügt nicht absichtlich, es generiert schlicht die wahrscheinlichste nächste Wortfolge – ohne ein echtes Wahrheitsverständnis.\n\nEntstehungsgründe:\n- LLMs lernen statistische Muster in Sprache, keine verifizierten Fakten\n- Bei seltenen oder widersprüchlichen Trainingsdaten interpoliert das Modell – es füllt Lücken mit plausibel klingenden, aber falschen Inhalten\n- Das Modell hat keinen Mechanismus, um zu erkennen, was es nicht weiß – es antwortet trotzdem\n- Zu hohe Temperatur (Kreativitätsparameter) erhöht die Halluzinationsrate\n\nBeispiele:\n- Erfundene Gerichtsurteile mit korrektem Aktenzeichen-Format aber falschem Inhalt\n- Biografien realer Personen mit erfundenen Lebensstationen\n- Quellenangaben zu Büchern oder Studien, die nicht existieren\n- Falsche Jahreszahlen bei historischen Ereignissen\n\nWie man Halluzinationen erkennt:\n- Fakten aus LLM-Ausgaben immer mit verlässlichen Quellen gegenprüfen\n- Misstrauen bei sehr spezifischen Angaben (Zahlen, Daten, Namen, Zitate)\n- Bei Unsicherheit das Modell direkt fragen: Bist du sicher? Welche Quellen hast du dafür?\n- Ausgaben verschiedener Modelle vergleichen\n\nVorsichtsmaßnahmen:\n- LLMs nie als alleinige Informationsquelle nutzen, besonders bei fachkritischen Themen\n- Eigenes Fachwissen als Korrektiv einsetzen – je mehr man weiß, desto schneller fällt eine Halluzination auf\n- Bei sensiblen Bereichen (Recht, Medizin, Finanzen) immer Experten hinzuziehen\n- Outputs dokumentieren und nachvollziehbar halten", open:true, generated:false },
+  { id:5, name:"Trend-Recherche: Projektmanagement & Jobaussichten Düsseldorf 2026", cat:"pm", done:false, date:"30.03.2026", note:"MARKTLAGE\nÜber 160 offene Stellen auf Indeed, ~1.000 auf LinkedIn im Großraum Düsseldorf/NRW (Stand März 2026). Die Nachfrage ist hoch und wächst weiter.\n\nTOP-BRANCHEN IN DÜSSELDORF:\n- Banken & Versicherungen (z.B. Commerzbank, Deutsche Apotheker- und Ärztebank)\n- Telekommunikation & Glasfaser (OXG, Deutsche Glasfaser)\n- Energie & IT-Dienstleistungen\n- Öffentlicher Sektor & Beratung\n\nGEHALT (brutto/Jahr):\n- Projektmanager Einstieg: ~50.000 €\n- Projektmanager erfahren: ~65.000 €\n- IT-Projektmanager erfahren: ~60.000–88.000 €\n- Scrum Master Düsseldorf Einstieg: ~59.600 €\n- Scrum Master Düsseldorf Median: ~82.000 €\n- Scrum Master Düsseldorf Senior: bis ~104.700 €\n- Leiter/in Projektmanagement Ø: ~82.800 €\n\nGEFRAGTE SKILLS:\n- Agile Methoden: Scrum, Kanban, SAFe\n- Zertifikate: PSM I/II, PMP, PRINCE2, IPMA\n- Tools: Jira, MS Project, Excel, PowerPoint, Power BI\n- Soft Skills: Kommunikation, Stakeholdermanagement, Teamführung\n- Trendthemen: KI-Anwendungen, Prozessautomatisierung, hybrides PM\n\nKARRIEREPFAD:\nEinstieg → PMO / Teilprojektkoordination → Projektmanager → Senior PM → Programm-/Projektleitung\n\nFAZIT: Sehr gute Aussichten in Düsseldorf. Mit PSM-Zertifikat und Scrum-Kenntnissen aus der ChapterNext-Weiterbildung liegt man genau im gefragten Profil.", open:true, generated:false },
+  { id:6, name:"GPT Canvas vs. Claude Artifacts – KI-Tool-Vergleich", cat:"digital", done:false, date:"30.03.2026", note:"Das Modul KI geht nur auf ChatGPT/OpenAI ein – hier die Ergänzung aus Claude-Perspektive:\n\nClaude's Äquivalent zu GPT Canvas heißt 'Artifacts'.\n\nBEIDE TOOLS: Separater Arbeitsbereich neben dem Chat für Dokumente, Code und Inhalte.\n\nVERGLEICH:\n- Dokumente schreiben & bearbeiten: beide ✓\n- Code schreiben & ausführen: beide ✓\n- Direkte Inline-Bearbeitung im Panel: beide ✓\n- Interaktive HTML/React-Widgets: nur Claude Artifacts ✓\n- SVG-Visualisierungen & Diagramme: Claude deutlich stärker\n- Zielgruppe: Canvas eher Texte & Code / Artifacts breiter inkl. interaktive Apps\n\nGRÖSSTER UNTERSCHIED:\nClaude Artifacts können vollständig interaktive Anwendungen sein (z.B. der Übungsordner als HTML-App). Das geht mit Canvas so nicht.\n\nPRAXISBEISPIEL AUS DIESER WEITERBILDUNG:\nDer KI-gestützte Übungsordner (uebungen-ordner.html) ist ein Claude Artifact – eine vollständige interaktive Web-App, die direkt im Chat gebaut und als Datei exportiert wurde.", open:true, generated:false },
+  { id:7, name:"Praxisübung: Software-Prototyp mit Claude Artifacts", cat:"digital", done:false, date:"30.03.2026", note:"AUFGABE AUS DEM MODUL:\nEin kleines Tool entwickeln, das repetitive PC-Aufgaben erleichtert. Das Modul empfahl Canvas (GPT) – hier wurde stattdessen Claude Artifacts genutzt.\n\nUMGESETZTER PROTOTYP: Meeting-Notizen Tool (meeting-notizen.html)\n\nFUNKTIONEN:\n- Meetings anlegen mit Titel, Datum, Uhrzeit, Ort, Teilnehmer\n- Ziel, Agenda, Notizen & Entscheidungen dokumentieren\n- Action Items mit Zuständigen hinzufügen & abhaken\n- Fertiges Protokoll per Klick in Zwischenablage kopieren\n- Druckfunktion für physische Ablage\n- Statusübersicht: offene/abgeschlossene Meetings & Action Items\n\nWAS DIESER PROTOTYP ZEIGT:\n- Claude Artifacts können vollständige interaktive Web-Apps erzeugen\n- Kein Programmier-Vorwissen nötig – natürlichsprachige Beschreibung reicht\n- Ergebnis ist eine echte, lokal nutzbare HTML-Datei\n- Vorteil gegenüber Canvas: reichhaltigere Interaktivität möglich\n\nLERNEFFEKT:\nKI als Entwicklungspartner für eigene Alltagstools – ohne Code schreiben zu können.", open:false, generated:false },
+  { id:8, name:"Projekte anlegen in Claude", cat:"digital", done:true, date:"30.03.2026", note:"SELBSTEINSCHÄTZUNG: Bereits beherrscht ✓\n\nWas in diesem Modul behandelt wird:\n- Projekte in Claude.ai anlegen und benennen\n- Wissensbasis / Projektdateien hochladen\n- Kontext über mehrere Gespräche hinweg nutzen\n- Projekt-Einstellungen & Systemanweisungen\n\nPraxisnachweis aus dieser Weiterbildung:\nDieser gesamte Übungsordner wurde im Rahmen eines Claude-Projekts erarbeitet. Mehrere HTML-Tools wurden erstellt, Übungen dokumentiert und iterativ weiterentwickelt – alles innerhalb eines strukturierten Projektkontexts.\n\nFAZIT: Kompetenz nachgewiesen durch aktive Anwendung.", open:false, generated:false },
+  { id:9, name:"Customizing: PM-Vokabular Modus & Add-ons", cat:"digital", done:true, date:"30.03.2026", note:"MODULINHALT: Customizing von KI-Tools\n\nWAS CUSTOMIZING BEDEUTET:\nEinen KI-Assistenten durch gezielte Anweisungen dauerhaft auf eigene Bedürfnisse anpassen – ohne jedes Mal neu erklären zu müssen.\n\nZWEI WEGE IN CLAUDE:\n1. Projektanweisung (System Prompt) in den Projekteinstellungen\n   → gilt dauerhaft für ALLE Gespräche im Projekt\n   → einmal einrichten, immer aktiv\n2. Direkt im Chat\n   → gilt nur für das aktuelle Gespräch\n\nAKTIVIERTE ANPASSUNG (ab 30.03.2026):\nPM-Vokabular Modus: PM- und Scrum-Begriffe werden fett hervorgehoben und beim ersten Vorkommen kurz erklärt – zur Festigung des Fachvokabulars.\n\nEMPFOHLENE ADD-ONS FÜR DIE FORTBILDUNG:\n- PM-Vokabular Modus (aktiv) ✓\n- Flashcard-Generator nach jeder Übung\n- Lernfortschritt-Karte (Modulübersicht)\n- Bewerbungs-Coach (Inhalte → CV-Sprache)\n- Wöchentliches Wiederholungs-Quiz\n- Modul-Verknüpfer (Zusammenhänge visualisieren)\n\nEMPFEHLUNG FÜR PROJEKTANWEISUNG:\n'Führe alle Gespräche so, dass PM- und Scrum-Begriffe fett hervorgehoben und beim ersten Vorkommen kurz erklärt werden. Nutze das Vokabular aktiv, um das Fachvokabular zu festigen.'\n\nFAZIT: Customizing = eigener System Prompt → KI arbeitet dauerhaft im gewünschten Stil.", open:false, generated:false },
+  { id:10, name:"KI-Ethik & Verantwortung", cat:"digital", done:true, date:"30.03.2026", note:"MODULINHALT: Ethik und Verantwortung im KI-Einsatz\n\nKERNTHEMEN:\n\n1. BIAS (= systematische Verzerrung durch Trainingsdaten)\n   → KI-Modelle können Vorurteile aus Trainingsdaten übernehmen\n   → Relevant bei: Personalentscheidungen, Kreditvergabe, Gesichtserkennung\n   → Verantwortung: Menschen müssen KI-Entscheidungen prüfen und hinterfragen\n\n2. TRANSPARENZ\n   → Wer im Stakeholder-Kreis weiß, dass KI beteiligt war?\n   → Kennzeichnungspflicht von KI-generierten Inhalten (EU AI Act)\n   → Im Projektmanagement: offene Kommunikation über KI-Einsatz im Team\n\n3. VERANTWORTUNG & HAFTUNG\n   → Wer haftet bei Fehlern eines KI-gestützten Projektergebnisses?\n   → KI kann nicht zur Rechenschaft gezogen werden – Menschen schon\n   → Wichtig: KI als Werkzeug, nicht als Entscheidungsträger\n\n4. DATENSCHUTZ & DSGVO\n   → Keine personenbezogenen Daten in KI-Tools eingeben ohne Prüfung\n   → DSGVO-Konformität beim Einsatz von KI im Projektteam beachten\n\nFAZIT: Als Scrum Master / Projektmanagerin zunehmend gefragt, KI-Einsatz nicht nur nach Effizienz, sondern auch nach Ethik und Nachhaltigkeit zu bewerten.", open:false, generated:false },
+  { id:11, name:"Digital Literacy 2.0: Ressourcenverbrauch & Nachhaltigkeit von KI", cat:"digital", done:true, date:"30.03.2026", note:"MODULINHALT: Digitale Verantwortung & ökologischer Fußabdruck von KI\n\nERNÜCHTERNDE FAKTEN:\n- Eine LLM-Anfrage verbraucht ~10x mehr Energie als eine Google-Suche\n- Bei Milliarden täglicher Anfragen → Stromverbrauch ganzer Länder\n- Microsoft, Google & Amazon haben bereits Verträge mit Atomkraftwerken\n- Three Mile Island (USA) wurde 2024 für KI-Stromversorgung reaktiviert\n\nDAS ETHISCHE DILEMMA:\nKI ermöglicht enorme Effizienzgewinne (z.B. in Ressourcenplanung, Risikomanagement)\n– schafft aber gleichzeitig gigantischen neuen Ressourcenbedarf.\nFrage: Wann ist der ROI eines KI-Einsatzes wirklich positiv, wenn man den ökologischen Fußabdruck einrechnet?\n\nRELEVANZ FÜR PM & SCRUM:\n- Als Projektmanagerin/Scrum Master: KI-Einsatz nicht nur nach Effizienz bewerten\n- Nachhaltigkeitsaspekte gehören in die Risikoanalyse\n- Digitale Verantwortung = Teil moderner Führungskompetenz\n- Frage im Team: Welche Prozesse wirklich automatisieren – und welche nicht?\n\nPERSÖNLICHE REFLEXION:\nTech-Giganten mit eigenen Atomkraftwerken – das wirft grundlegende Fragen\nüber Kontrollverlust, Machtkonzentration und gesellschaftliche Verantwortung auf.\n\nFAZIT: Digital Literacy 2.0 bedeutet nicht nur KI nutzen können,\nsondern ihre gesellschaftlichen und ökologischen Auswirkungen kritisch einordnen.", open:true, generated:false }
+];
+
+var af = "all";
+
+function gc(id) { return CATS.find(function(c){ return c.id===id; }) || CATS[5]; }
+
+function td() {
+  var d = new Date();
+  return d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+}
+
+function renderFBar() {
+  var b = document.getElementById('fbar');
+  var h = '<button class="fbtn'+(af==='all'?' on':'')+'" onclick="sf(\'all\')">Alle</button>';
+  CATS.forEach(function(c) {
+    if (!entries.some(function(e){ return e.cat===c.id; })) return;
+    h += '<button class="fbtn'+(af===c.id?' on':'')+'" onclick="sf(\''+c.id+'\')">'+
+      '<span class="cdot" style="background:'+c.dt+'"></span>'+c.l+'</button>';
+  });
+  b.innerHTML = h;
+}
+
+function renderList() {
+  var el = document.getElementById('list');
+  var tot = entries.length;
+  document.getElementById('cnt').textContent = tot + (tot===1 ? ' Eintrag' : ' Einträge');
+
+  var vis = af==='all' ? entries : entries.filter(function(e){ return e.cat===af; });
+
+  if (!vis.length) {
+    el.innerHTML = '<div class="empty">Keine Einträge in dieser Kategorie.</div>';
+    return;
+  }
+
+  el.innerHTML = vis.map(function(e) {
+    var c = gc(e.cat);
+    var resultHtml = e.generated && e.note
+      ? '<div class="result-text">'+escHtml(e.note)+'</div>'
+      : '<textarea placeholder="Notiz / Kontext..." onchange="saveN('+e.id+',this.value)" onkeyup="saveN('+e.id+',this.value)">'+escHtml(e.note)+'</textarea>';
+
+    return '<div class="card'+(e.done?' done':'')+'" id="ec-'+e.id+'">'
+      +'<div class="card-main">'
+        +'<div class="chk'+(e.done?' on':'')+'" onclick="tog('+e.id+')" title="Abhaken"></div>'
+        +'<span class="pill" style="background:'+c.bg+';color:'+c.tx+'">'+c.l+'</span>'
+        +'<span class="ename">'+escHtml(e.name)+'</span>'
+        +'<span class="edate">'+e.date+'</span>'
+        +'<button class="icon-btn ai" onclick="genEx('+e.id+')" id="gbtn-'+e.id+'">'
+          +(e.generated ? 'Neu generieren' : 'Übungen generieren')
+        +'</button>'
+        +'<button class="icon-btn" onclick="togN('+e.id+')" title="Notiz">'+
+          (e.open ? '▲' : (e.note ? '★' : '☆'))+'</button>'
+        +'<button class="icon-btn del" onclick="rem('+e.id+')" title="Löschen">×</button>'
+      +'</div>'
+      +'<div class="sub'+(e.open?' open':'')+'" id="sub-'+e.id+'">'
+        +'<div class="sub-inner">'
+          +'<div class="loading-row" id="lo-'+e.id+'">'
+            +'<div class="spin"></div>'
+            +'Übungen werden generiert...'
+          +'</div>'
+          + resultHtml
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render() { renderFBar(); renderList(); }
+function sf(id) { af=id; render(); }
+
+function tog(id) {
+  entries = entries.map(function(e){ return e.id===id ? Object.assign({},e,{done:!e.done}) : e; });
+  render();
+}
+
+function togN(id) {
+  entries = entries.map(function(e){ return e.id===id ? Object.assign({},e,{open:!e.open}) : e; });
+  render();
+}
+
+function saveN(id, v) {
+  entries = entries.map(function(e){ return e.id===id ? Object.assign({},e,{note:v, generated:false}) : e; });
+}
+
+function rem(id) {
+  entries = entries.filter(function(e){ return e.id!==id; });
+  render();
+}
+
+function addE() {
+  var name = document.getElementById('nn').value.trim();
+  if (!name) return;
+  var cat = document.getElementById('nc').value;
+  var note = document.getElementById('no').value.trim();
+  entries.push({ id:Date.now(), name:name, cat:cat, done:false, date:td(), note:note, open:!!note, generated:false });
+  document.getElementById('nn').value = '';
+  document.getElementById('no').value = '';
+  render();
+}
+
+function genEx(id) {
+  var e = entries.find(function(x){ return x.id===id; });
+  if (!e) return;
+
+  var gbtn = document.getElementById('gbtn-'+id);
+  var lo   = document.getElementById('lo-'+id);
+  var sub  = document.getElementById('sub-'+id);
+
+  if (gbtn) { gbtn.disabled=true; gbtn.textContent='Lädt...'; }
+  if (sub)  sub.classList.add('open');
+  if (lo)   lo.classList.add('show');
+
+  var c = gc(e.cat);
+  var prompt = 'Erstelle bitte Übungen zum Thema "'+e.name+'" (Kategorie: '+c.l
+    +') aus meinem Weiterbildungsmodul (Office Manager / Projektmanagement / Scrum Master bei ChapterNext, Laufzeit 30.03.–12.10.2026).'
+    +' Liefere gemischten Schwierigkeitsgrad mit genau diesen 4 Teilen:\n'
+    +'1. Multiple-Choice-Frage (4 Antwortoptionen A–D, eine richtig, Lösung ganz am Ende)\n'
+    +'2. Praxisaufgabe / Szenario (kurzer realistischer Fall aus dem Berufsalltag zum aktiven Lösen)\n'
+    +'3. Erklärung + Beispiel (max. 3 Sätze Erklärung + 1 konkretes Praxisbeispiel)\n'
+    +'4. Reflexionsfrage (bezieht sich auf eigene Erfahrungen oder Berufssituationen)\n'
+    +(e.note && !e.generated ? 'Zusatzkontext: '+e.note+'\n' : '')
+    +'Antworte auf Deutsch, klar gegliedert mit nummerierten Überschriften.';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1200,
+      messages: [{ role:'user', content:prompt }]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if (lo) lo.classList.remove('show');
+    if (gbtn) { gbtn.disabled=false; gbtn.textContent='Neu generieren'; }
+    var text = (data.content && data.content[0] && data.content[0].text) || 'Keine Antwort erhalten.';
+    entries = entries.map(function(x){ return x.id===id ? Object.assign({},x,{note:text, open:true, generated:true}) : x; });
+    render();
+  })
+  .catch(function(err){
+    if (lo) lo.classList.remove('show');
+    if (gbtn) { gbtn.disabled=false; gbtn.textContent='Übungen generieren'; }
+    entries = entries.map(function(x){
+      return x.id===id ? Object.assign({},x,{note:'Fehler beim Generieren. Bitte erneut versuchen.\n\n'+err, open:true, generated:false}) : x;
+    });
+    render();
+  });
+}
+
+function buildSel() {
+  var s = document.getElementById('nc');
+  s.innerHTML = CATS.map(function(c){ return '<option value="'+c.id+'">'+c.l+'</option>'; }).join('');
+  s.value = 'algo';
+}
+
+document.getElementById('nn').addEventListener('keydown', function(e){ if(e.key==='Enter') addE(); });
+
+buildSel();
+render();
+renderKapitel();
+</script>
+</body>
+</html>
